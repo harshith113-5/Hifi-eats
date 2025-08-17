@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Agent Issue Report</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: #fef6e4;
+            color: #333;
+            
+        }
+        /* Container and Form Section Styles */
+        .container {
+            display: flex;
+            flex-direction: row;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            max-width: 1200px;
+            width: 100%;
+            margin: 80px auto 40px auto;
+            animation: fade-in-container 1.5s ease-out;
+        }
+        
+        .quotes-section {
+            flex: 1; /* Keep the quotes section at 1 */
+            background: linear-gradient(135deg, #ff5722, #F2994A); /* Gradient background */
+            padding: 40px 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            transform: translateX(-100%);
+            animation: slide-in-left 1s ease-out forwards;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .quotes-section p {
+            font-size: 1rem; /* Smaller font size */
+            font-weight: 400; /* Normal weight for a lighter feel */
+            text-align: center;
+            margin-bottom: 20px;
+            line-height: 1.4; /* Reduce line height for compactness */
+            max-width: 85%; /* Constrain text width for better layout */
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        .quotes-section p:hover {
+            transform: scale(1.03); /* Slight hover effect */
+        }
+        
+        .quotes-section h1 {
+            font-size: 1.8rem; /* Smaller heading size */
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+       
+        
+        
+        .form-section {
+            flex: 2; /* Make the form section take up twice the space of the quotes section */
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transform: translateX(100%);
+            animation: fade-in-right 1.5s ease-out forwards;
+        }
+        
+        .form-section h2 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 30px;
+            text-align: left;
+            padding-left: 5px;
+        }
+        
+        .form-section label {
+            font-weight: 500;
+            color: #444;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            text-align: left;
+        }
+        
+        .form-section input,
+        .form-section select,
+        .form-section textarea {
+            width: 100%;
+            padding: 14px 18px;
+            margin-top: 10px;
+            margin-bottom: 25px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            background-color: #f9f9f9;
+        }
+        
+        .form-section input:focus,
+        .form-section select:focus,
+        .form-section textarea:focus {
+            border-color:#ff5722;
+            box-shadow: 0 0 8px rgba(255, 127, 0, 0.5);
+            outline: none;
+        }
+        
+        .form-section textarea {
+            height: 150px;
+            resize: none;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        .submit-btn {
+            background-color: #ff5722;
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .submit-btn:hover {
+            background-color: #ff5722;
+            transform: translateY(-2px);
+        }
+        
+        .submit-btn:focus {
+            box-shadow: 0 0 10px rgba(255, 127, 0, 0.5);
+        }
+        
+        /* For input field focus */
+        input, select, textarea {
+            background-color: #fff;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            background-color: #fff;
+        }
+        
+
+
+        /* Header Section */
+        header {
+            background-color: #ff5722;
+            color: white;
+            padding: 0.5rem 1rem; /* Reduced padding */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        header h1 {
+            font-size: 1.5rem; /* Reduced font size */
+            margin: 0.5rem 0;
+        }
+        
+        header .header-buttons {
+            display: flex;
+            gap: 0.8rem; /* Reduced gap between buttons */
+        }
+        
+        header .btn {
+            background-color: white;
+            color: #ff5722;
+            border: none;
+            padding: 0.5rem 0.9rem; /* Reduced padding */
+            border-radius: 25px;
+            font-size: 0.9rem; /* Reduced font size */
+            font-weight: bold;
+            text-decoration: none;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        
+        header .btn:hover {
+            background-color: #ffd7b5;
+            transform: scale(1.05);
+        }
+        
+        /* Footer Section */
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 0.5rem 1rem; /* Reduced padding */
+            margin-top: auto;
+        }
+        
+        footer p {
+            margin: 0.5rem 0;
+            font-size: 0.9rem; /* Reduced font size */
+        }
+        
+
+        @keyframes slide-in-left {
+            from {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fade-in-right {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fade-in-container {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .quotes-section {
+                border-right: none;
+                border-bottom: 2px solid #f0f0f0;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-container">
+        {% for category, message in messages %}
+        <div class="flash-message {{ category }}">
+            <p>{{ message }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    <script>
+        // Automatically hide flash messages after 5 seconds
+        setTimeout(function() {
+            const flashContainer = document.querySelector('.flash-container');
+            if (flashContainer) {
+                flashContainer.style.transition = "opacity 0.5s ease";
+                flashContainer.style.opacity = "0";
+                setTimeout(() => flashContainer.remove(), 500); // Remove after fade-out
+            }
+        }, 5000); // 5 seconds
+    </script>
+    {% endif %}
+    {% endwith %}
+    <header>
+        <h1>Delivery Dashboard</h1>
+        <div class="header-buttons">
+            <a href="{{ url_for('delivery') }}" class="btn">Home</a>
+        </div>
+    </header>
+    
+    <div class="container" style="max-width: 700px; margin: 20px auto; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); padding: 10px;">
+        <div class="quotes-section" style="padding: 10px; font-size: 0.85rem; line-height: 1.4;">
+            <p>Stuck at a delivery? Let us help you out.</p>
+            <p>Reporting an issue ensures smoother operations.</p>
+            <p>Together, we deliver better!</p>
+        </div>
+    
+        <div class="form-section" style="padding: 10px; font-size: 0.85rem;">
+            <h2 style="font-size: 1.3rem; margin-bottom: 10px;">Report an Issue with Delivery</h2>
+            <form action="/submit_agent_issue" method="POST">
+                <label for="agent-name" style="font-size: 0.85rem;">Agent Name:</label>
+                <input 
+                    type="text" 
+                    id="agent-name" 
+                    name="agent_name" 
+                    placeholder="Enter your name" 
+                    required 
+                    oninput="restrictToAlphabets(this)" 
+                    style="padding: 8px; font-size: 0.85rem; margin-bottom: 10px;">
+            
+                <label for="order-id" style="font-size: 0.85rem;">Order ID:</label>
+                <input type="number" id="order-id" name="order_id" placeholder="Enter the Order ID" required 
+                    oninput="validateOrderId(this)" style="padding: 8px; font-size: 0.85rem; margin-bottom: 10px;">
+                
+                <script>
+                    // Function to validate and restrict the agent name input
+                    function restrictToAlphabets(input) {
+                        // Replace any non-alphabetic character or number with an empty string
+                        input.value = input.value.replace(/[^A-Za-z\s]/g, '');
+                    }
+            
+                    // Function to validate order ID input (only numeric values)
+                    function validateOrderId(input) {
+                        // Remove any non-numeric characters
+                        input.value = input.value.replace(/[^0-9]/g, '');
+                    }
+                </script>
+                
+                <label for="issue-type" style="font-size: 0.85rem;">Issue Type:</label>
+                <select id="issue-type" name="issue_type" required style="padding: 8px; font-size: 0.85rem; margin-bottom: 10px;">
+                    <option value="">-- Select Issue Type --</option>
+                    <option value="address_inaccessible">Address Inaccessible</option>
+                    <option value="customer_unreachable">Customer Unreachable</option>
+                    <option value="vehicle_issue">Vehicle Issue</option>
+                    <option value="other">Other</option>
+                </select>
+            
+                <label for="details" style="font-size: 0.85rem;">Issue Details:</label>
+                <textarea id="details" name="details" placeholder="Provide more details about the issue..." required style="padding: 8px; font-size: 0.85rem; height: 80px; margin-bottom: 10px;"></textarea>
+            
+                <button type="submit" class="submit-btn" style="padding: 8px; font-size: 0.85rem;">Submit Issue</button>
+            </form>
+            
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2024 HiFiDelivery </p>
+        <p>Ensure to check notifications regularly for updates on new orders!</p>
+    </footer>
+</body>
+</html>

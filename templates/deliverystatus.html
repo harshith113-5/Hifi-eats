@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Delivery Agent Dashboard</title>
+  <style>
+    /* General Reset & Layout */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background-color: #f7f9fc;
+      color: #333;
+    }
+
+    header {
+      background-color: #ff7043; /* Orange color */
+      color: white;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    header .home-btn {
+      background-color: white;
+      color: #ff7043; /* Orange color */
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 1rem;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    header .home-btn:hover {
+      background-color: #ffab91;
+      color: white;
+    }
+
+    main {
+      flex: 1;
+      padding: 1.5rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .orders {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 1rem;
+      background-color: white;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .orders h2 {
+      color: #ff7043; /* Orange color */
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    th, td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #ff7043; /* Orange color */
+      color: white;
+    }
+
+    td {
+      color: #555;
+    }
+
+    button {
+      background-color: #ff7043; /* Orange color */
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #ffab91;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 5px;
+      font-size: 0.85rem;
+      font-weight: bold;
+    }
+
+    .status-pending {
+      background-color: #ffcc00;
+      color: #664d00;
+    }
+
+    .status-picked-up {
+      background-color: #ff7043; /* Orange color */
+      color: white;
+    }
+
+    .status-delivered {
+      background-color: #4caf50;
+      color: white;
+    }
+
+    footer {
+      background-color: #333;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      margin-top: auto;
+    }
+
+    /* Filter Dropdown */
+    .filter-container {
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .filter-container select {
+      padding: 0.5rem;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+      font-size: 1rem;
+    }
+
+    .filter-container button {
+      margin-left: 1rem;
+      background-color: #ff7043; /* Orange color */
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color 0.3s;
+    }
+
+    .filter-container button:hover {
+      background-color: #ffab91;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      table, th, td {
+        display: block;
+      }
+
+      th {
+        display: none;
+      }
+
+      td {
+        margin-bottom: 1rem;
+        border-bottom: 1px solid #ddd;
+        padding: 0.5rem;
+      }
+
+      .filter-container {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .filter-container button {
+        margin-top: 1rem;
+        width: 100%;
+      }
+    }
+    .flash-container {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+
+        .flash-message {
+            background-color: #f44336;
+            /* Red background for error */
+            color: white;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .flash-message.success {
+            background-color: #4CAF50;
+            /* Green background for success */
+        }
+
+        .flash-message.danger {
+            background-color: #f44336;
+            /* Red background for error */
+        }
+
+        .flash-message p {
+            margin: 0;
+        }
+
+        /* Hide the flash message after 3 seconds */
+        .flash-message {
+            display: block;
+            animation: fadeInOut 3s forwards;
+        }
+  </style>
+</head>
+<body>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-container">
+        {% for category, message in messages %}
+        <div class="flash-message {{ category }}">
+            <p>{{ message }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    <script>
+        // Automatically hide flash messages after 5 seconds
+        setTimeout(function() {
+            const flashContainer = document.querySelector('.flash-container');
+            if (flashContainer) {
+                flashContainer.style.transition = "opacity 0.5s ease";
+                flashContainer.style.opacity = "0";
+                setTimeout(() => flashContainer.remove(), 500); // Remove after fade-out
+            }
+        }, 5000); // 5 seconds
+    </script>
+    {% endif %}
+    {% endwith %}
+  <header>
+    <h1>Delivery Agent Dashboard</h1>
+    <a href="{{ url_for('delivery') }}" class="home-btn">Home</a>
+  </header>
+  <main>
+    <section class="orders">
+      <h2>Assigned Orders</h2>
+
+      <!-- Filter Section -->
+      <div class="filter-container">
+        <form method="get" action="{{ url_for('status')}}">
+          <label for="status">Filter by Status:</label>
+          <select name="status" id="status">
+            <option value="" {% if not request.args.get('status') %}selected{% endif %}>All</option>
+            <option value="New" {% if request.args.get('status') == 'New' %}selected{% endif %}>New</option>
+            <option value="In Progress" {% if request.args.get('status') and request.args.get('status').strip() == 'In Progress' %}selected{% endif %}>In Progress</option>
+            <option value="Completed" {% if request.args.get('status') == 'Completed' %}selected{% endif %}>Completed</option>
+          </select>
+          <button type="submit">Filter</button>
+        </form>
+      </div>
+
+      <!-- Orders Table -->
+      <table>
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Customer Name</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if orders %}
+            {% for order in orders %}
+              <tr>
+                <td data-order-id="{{ order[0] }}">{{ order[0] }}</td><!-- Order ID -->
+                <td>{{ order[1] }}</td> <!-- Customer Name -->
+                <td>{{ order[2] }}</td> <!-- Phone -->
+                <td>{{ order[3] }}</td> <!-- Address -->
+                <td>
+                  <span class="status-badge {% if order[4] == 'Pending' %}status-pending{% elif order[4] == 'Picked Up' %}status-picked-up{% else %}status-delivered{% endif %}">
+                    {{ order[4] }}
+                  </span>
+                </td>
+                <td>
+                  <button onclick="updateStatus({{ order[0] | tojson }})">Update Status</button>
+                </td>
+              </tr>
+            {% endfor %}
+          {% else %}
+            <tr><td colspan="6">No orders to display.</td></tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </section>
+  </main>
+  <footer>
+    <p>© 2024 HiFiDelivery | Powered by Swiggy Colors</p>
+  </footer>
+
+  <script>
+    function updateStatus(orderId) {
+        fetch("/update_status_of_order", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ order_id: orderId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Update the UI dynamically
+                const row = document.querySelector(`tr[data-order-id="${orderId}"]`);
+                if (row) {
+                    const statusCell = row.querySelector("td:nth-child(5) span");
+                    if (statusCell) {
+                        statusCell.className = "status-badge status-delivered";
+                        statusCell.textContent = "Completed";
+                    }
+                }
+                alert("Order status updated successfully!");
+            } else {
+                alert("Error updating status: " + (data.error || "Unknown error"));
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("Failed to update order status.");
+        });
+    }
+    </script>
+    
+</body>
+</html>

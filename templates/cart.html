@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styless.css') }}">
+    <title>Your Cart</title>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>Your Cart</h1>
+            <button class="menu-btn" onclick="goToMenu()">Go to Menu</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-content">
+            <section id="cart-items">
+                <!-- Cart items will be dynamically inserted here -->
+            </section>
+
+            <section id="location-section">
+                <h2>Delivery Location</h2>
+                <p id="location-text">Default Location: Bangalore City</p>
+                <button onclick="editLocation()">Edit Location</button>
+                <div id="out-of-range" style="display: none;">Out of range, we will be serving there soon.</div>
+            </section>
+        </div>
+
+        <div class="sidebar">
+            <section id="charges-section">
+                <h2>Charges</h2>
+                <div class="charges-row">
+                    <span>GST (18%)</span>
+                    <span>₹<span id="gst-charge">0.00</span></span>
+                </div>
+                <div class="charges-row">
+                    <span>Platform Fees</span>
+                    <span>₹<span id="platform-fee">2.00</span></span>
+                </div>
+                <div class="charges-row">
+                    <span>Delivery Fee</span>
+                    <span>₹<span id="delivery-fee">5.00</span></span>
+                </div>
+            </section>
+
+            <section id="total-section">
+                <h2>Total Amount</h2>
+                <div class="charges-row">
+                    <strong>Total</strong>
+                    <strong>₹<span id="total-amount">0.00</span></strong>
+                </div>
+            </section>
+
+            <section id="payment-method-section">
+                <h2>Payment Method</h2>
+                <select id="payment-method" onchange="handlePaymentMethodChange()">
+                    <option value="">Select Payment Method</option>
+                    <option value="cash">Cash on Delivery</option>
+                </select>
+            </section>
+
+            <section id="confirm-order" style="display: none;">
+                <button onclick="confirmOrder()">Confirm Order</button>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        const DEFAULT_CITY = "Bangalore City";
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const gstRate = 0.18;
+        const platformFee = 2.00;
+        const deliveryFee = 5.00;
+
+        function displayCart() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            cartItemsContainer.innerHTML = '';
+
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '<p>Your cart is empty!</p>';
+                return;
+            }
+
+            let total = 0;
+            cart.forEach(item => {
+                total += item.price * item.quantity;
+                const cartItem = document.createElement('div');
+                cartItem.classList.add('cart-item');
+                cartItem.innerHTML = `
+                    <div class="item-info">
+                        <div class="item-name">${item.name}</div>
+                        <div class="item-price">₹${item.price.toFixed(2)}</div>
+                    </div>
+                    <div class="quantity-control-wrapper">
+                        <div class="quantity-controls">
+                            <button class="quantity-btn minus" onclick="updateQuantity(${item.id}, -1)" ${item.quantity <= 1 ? 'disabled' : ''}>−</button>
+                            <span class="quantity">${item.quantity}</span>
+                            <button class="quantity-btn plus" onclick="updateQuantity(${item.id}, 1)">+</button>
+                        </div>
+                    </div>
+                    <div class="item-actions">
+                        <div class="item-total">₹${(item.price * item.quantity).toFixed(2)}</div>
+                        <button class="remove-btn" onclick="removeFromCart(${item.id})">× Remove</button>
+                    </div>
+                `;
+                cartItemsContainer.appendChild(cartItem);
+            });
+
+            updateTotalPrice(total);
+        }
+
+        function updateQuantity(itemId, change) {
+            const item = cart.find(item => item.id === itemId);
+            if (!item) return;
+
+            item.quantity += change;
+            if (item.quantity < 1) item.quantity = 1;
+            localStorage.setItem('cart', JSON.stringify(cart));
+            displayCart();
+        }
+
+        function removeFromCart(itemId) {
+            cart = cart.filter(item => item.id !== itemId);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            displayCart();
+        }
+
+        function updateTotalPrice(cartTotal) {
+            const gstCharge = cartTotal * gstRate;
+            const total = cartTotal + gstCharge + platformFee + deliveryFee;
+
+            document.getElementById('gst-charge').textContent = gstCharge.toFixed(2);
+            document.getElementById('platform-fee').textContent = platformFee.toFixed(2);
+            document.getElementById('delivery-fee').textContent = deliveryFee.toFixed(2);
+            document.getElementById('total-amount').textContent = total.toFixed(2);
+        }
+        function editLocation() {
+            const newLocation = prompt("Enter your delivery address (multiple lines allowed):");
+            const locationText = document.getElementById('location-text');
+            const outOfRangeText = document.getElementById('out-of-range');
+
+            if (newLocation) {
+                locationText.textContent = `Delivery Location: ${newLocation}`;
+                if (newLocation.toLowerCase().includes(DEFAULT_CITY.toLowerCase())) {
+                    outOfRangeText.style.display = 'none';
+                } else {
+                    outOfRangeText.style.display = 'block';
+                }
+            }
+        }
+
+        function handlePaymentMethodChange() {
+            const paymentMethod = document.getElementById('payment-method').value;
+            const confirmOrderSection = document.getElementById('confirm-order');
+
+            if (paymentMethod) {
+                confirmOrderSection.style.display = 'block';
+            } else {
+                confirmOrderSection.style.display = 'none';
+            }
+        }
+
+        function confirmOrder() {
+    if (cart.length === 0) {
+        alert("Your cart is empty. Please add items before confirming the order.");
+        return;
+    }
+
+    const paymentMethod = document.getElementById('payment-method').value;
+    const location = document.getElementById('location-text').textContent.split(": ")[1];
+    const total = parseFloat(document.getElementById('total-amount').textContent);
+    
+    const orderData = {
+        paymentMethod,
+        location,
+        cartItems: cart,
+        total
+    };
+
+    fetch('/api/confirm_order', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(orderData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.message === 'Order confirmed') {
+            // Clear the cart
+            localStorage.removeItem('cart');
+            // Redirect to the order tracking page
+            window.location.href = '/confirmOrder';  // Changed from '/confirmOrder.html'
+        } else {
+            alert("Failed to confirm order. Please try again.");
+        }
+    })
+    .catch(error => {
+        console.error('Error confirming order:', error);
+        alert("Error confirming order. Please try again.");
+    });
+}
+
+        function goToMenu() {
+            window.location.href = '/menu';
+        }
+
+        window.onload = displayCart;
+        
+
+    </script>
+</body>
+</html>

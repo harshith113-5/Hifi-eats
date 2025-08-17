@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loading Page</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif; /* Added better font */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f9f9f9;
+      overflow: hidden;
+    }
+
+    .loading-container {
+      text-align: center;
+      position: relative;
+    }
+
+    .scooter {
+      position: relative;
+      display: inline-block;
+      animation: moveScooter 5s linear infinite; /* Adjusted timing for smooth movement */
+    }
+
+    .scooter img {
+      width: 120px; /* Reduced the size of the image */
+    }
+
+    .loading-text {
+      margin-top: 20px;
+      font-size: 20px; /* Increased font size */
+      color: #333; /* Made color slightly darker */
+      font-weight: 600; /* Made text bold */
+      letter-spacing: 1px; /* Added spacing between letters for style */
+    }
+
+    @keyframes moveScooter {
+      0% {
+        transform: translateX(-120%); /* Start from far left of the page */
+      }
+      100% {
+        transform: translateX(120%); /* Exit far right of the page */
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="loading-container">
+    <div class="scooter">
+      <img src="delivery-bike.png" alt="Scooter">
+    </div>
+    <p class="loading-text">Loading, please wait...</p>
+  </div>
+
+  <script>
+    console.log("Loading animation active...");
+  </script>
+</body>
+</html>

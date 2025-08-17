@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <title>Login - HIFI FOOD DELIVERY</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      background: url("{{url_for('static',filename='img.jpg')}}") no-repeat center center fixed;
+      background-size: cover;
+    }
+
+    .container {
+      display: flex;
+      justify-content: flex-end; /* Align login box to the right */
+      align-items: center;
+      width: 100%;
+      padding: 20px;
+    }
+
+    .form-container {
+      width: 100%;
+      max-width: 400px;
+      background: rgba(255, 255, 255, 0.9); /* Lightly transparent white background */
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+      backdrop-filter: blur(10px); /* Frosted glass effect */
+    }
+
+    .form-container h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 26px;
+      color: #fc8019; /* Swiggy orange */
+      font-weight: bold;
+    }
+
+    .form-container label {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 8px;
+      color: #555; /* Neutral gray for labels */
+    }
+
+    .form-container select, 
+    .form-container input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd; /* Light gray border */
+      border-radius: 4px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .form-container select:focus,
+    .form-container input:focus {
+      border-color: #fc8019; /* Swiggy orange on focus */
+      box-shadow: 0 0 4px rgba(252, 128, 25, 0.5); /* Subtle orange glow */
+    }
+
+    .form-container button {
+      width: 100%;
+      padding: 12px;
+      background-color: #fc8019; /* Swiggy orange button */
+      color: #fff;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+
+    .form-container button:hover {
+      background-color: #d96e17; /* Darker orange on hover */
+      transform: translateY(-2px); /* Lift effect */
+    }
+
+    .form-container button:active {
+      transform: translateY(0); /* Reset lift effect */
+    }
+
+    .form-container .forgot-password {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .form-container .forgot-password a {
+      color: #fc8019; /* Swiggy orange for links */
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+
+    .form-container .forgot-password a:hover {
+      color: #d96e17; /* Darker orange on hover */
+      text-decoration: underline;
+    }
+
+    .form-container .signup {
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .form-container .signup a {
+      color: #fc8019; /* Swiggy orange for links */
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+
+    .form-container .signup a:hover {
+      color: #d96e17; /* Darker orange on hover */
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        justify-content: center; /* Center the login box on smaller screens */
+      }
+
+      .form-container {
+        margin: 20px;
+      }
+    }
+    
+    .flash-container {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+    }
+
+    .flash-message {
+      background-color: #f44336;
+      /* Red background for error */
+      color: white;
+      padding: 15px;
+      margin: 10px;
+      border-radius: 5px;
+      text-align: center;
+      font-size: 16px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .flash-message.success {
+      background-color: #4CAF50;
+      /* Green background for success */
+    }
+
+    .flash-message.danger {
+      background-color: #f44336;
+      /* Red background for error */
+    }
+
+    .flash-message p {
+      margin: 0;
+    }
+
+    /* Hide the flash message after 3 seconds */
+    .flash-message {
+      display: block;
+      animation: fadeInOut 3s forwards;
+    }
+
+    .password-field {
+      position: relative;
+      width: 100%;  /* Adjust to your needs */
+    }
+
+    #password {
+      width: 100%;
+      padding-right: 30px;  /* Space for the icon */
+      padding-left: 10px;
+      height: 40px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    .eye-icon {
+      position: absolute;
+      right: 10px;  /* Position the icon on the right side */
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-container">
+        {% for category, message in messages %}
+        <div class="flash-message {{ category }}">
+            <p>{{ message }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    <script>
+        // Automatically hide flash messages after 5 seconds
+        setTimeout(function() {
+            const flashContainer = document.querySelector('.flash-container');
+            if (flashContainer) {
+                flashContainer.style.transition = "opacity 0.5s ease";
+                flashContainer.style.opacity = "0";
+                setTimeout(() => flashContainer.remove(), 500); // Remove after fade-out
+            }
+        }, 5000); // 5 seconds
+    </script>
+    {% endif %}
+  {% endwith %}
+  <div class="container">
+    <div class="form-container">
+      <h1>HIFI FOOD DELIVERY</h1>
+      <form action="{{ url_for('login') }}" method="POST">
+        <label for="role">Role</label>
+        <select id="role" name="role" required>
+          <option value="admin">Admin</option>
+          <option value="customer">Customer</option>
+          <option value="deliveryagent">Delivery Agent</option>
+        </select>
+        
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" placeholder="Enter your phone number or email" required>
+        
+        <label for="password">Password</label>
+        <div class="password-field">
+          <input type="password" id="password" name="password" placeholder="Enter your password" required>
+          <span id="toggle-password" class="eye-icon"><i class="fas fa-eye"></i></span>
+        </div>
+        <button type="submit">Login</button>
+      </form>
+      
+      <div class="forgot-password">
+        <a href="{{ url_for('recovery') }}">Forgot Password?</a>
+      </div>
+      
+      <div class="signup">
+        Don't have an account? <a href="{{ url_for('register') }}">Sign up</a>
+      </div>
+    </div>
+  </div>
+  <script>
+    document.getElementById("toggle-password").addEventListener("click", function() {
+        var passwordField = document.getElementById("password");
+        var icon = document.querySelector("#toggle-password i");
+
+        if (passwordField.type === "password") {
+            passwordField.type = "text";  // Show password
+            icon.classList.remove("fa-eye");  // Remove "eye" icon
+            icon.classList.add("fa-eye-slash");  // Add "eye-slash" icon
+        } else {
+            passwordField.type = "password";  // Hide password
+            icon.classList.remove("fa-eye-slash");  // Remove "eye-slash" icon
+            icon.classList.add("fa-eye");  // Add "eye" icon
+        }
+    });
+</script>
+</body>
+</html>

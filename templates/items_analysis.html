@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Items Analysis - HIFI DELIVERY</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* General styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background: #ff5722;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        header nav ul {
+            list-style: none;
+            display: flex;
+            gap: 15px;
+        }
+
+        header nav ul li a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        header nav ul li a i {
+            margin-right: 5px;
+        }
+
+        .content {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .table-container {
+            background-color: #ffe4c4; /* Light peach color */
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+            max-width: 1100px;
+            width: 100%;
+        }
+
+        h2 {
+            color: #ff5722;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table th, table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        table th {
+            background: #f0f0f0;
+        }
+
+        table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+        }
+
+        footer p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">HIFI DELIVERY ADMIN</div>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('admin')}}"><i class="fa-solid fa-house"></i> Home</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="content">
+        <div class="table-container">
+            <h2>Items Analysis</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item ID</th>
+                        <th>Item Name</th>
+                        <th>Price (₹)</th>
+                        <th>Category</th>
+                        <th>Subcategory</th>
+                        <th>Discount (%)</th>
+                        <th>Times Ordered</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if items %}
+                        {% for item in items %}
+                        <tr>
+                            <td>{{ item[0] }}</td>  <!-- itemId -->
+                            <td>{{ item[1] }}</td>  <!-- item_name -->
+                            <td>{{ item[2] }}</td>  <!-- price -->
+                            <td>{{ item[3] }}</td>  <!-- category -->
+                            <td>{{ item[4] }}</td>  <!-- subcategory -->
+                            <td>{{ item[5] }}</td>  <!-- discount -->
+                            <td>{{ item[6] }}</td>  <!-- times_ordered -->
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="7">No items available.</td>
+                        </tr>
+                    {% endif %}
+                </tbody>    
+            </table>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 HIFI DELIVERY. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>

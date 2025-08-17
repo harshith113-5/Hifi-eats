@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery KPIs Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+            color: #333;
+        }
+
+        .header {
+            background-color: #fc8019;
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        .filters {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem auto;
+            display: flex;
+            justify-content: space-around;
+            max-width: 1200px;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .filters input,
+        .filters select,
+        .filters button {
+            padding: 0.5rem 1rem;
+            margin: 0.5rem;
+            font-size: 1rem;
+            border: 1px solid #e2e2e2;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .filters button {
+            background-color: #fc8019;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .filters button:hover {
+            background-color: #d96f17;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            text-align: center;
+            flex: 1 1 calc(33% - 2rem);
+            min-width: 250px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #fc8019;
+        }
+
+        .card p {
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+
+        .chart-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        canvas {
+            margin: 1rem 0;
+        }
+
+        .chart-description {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        #onTimeDeliveryChart {
+            max-height: 250px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            .card {
+                flex: 1 1 100%;
+            }
+
+            .filters {
+                flex-direction: column;
+            }
+
+            .filters input,
+            .filters select,
+            .filters button {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Delivery KPIs Dashboard</h1>
+    </div>
+
+    <div class="filters">
+        <input type="date" id="start-date" placeholder="Start Date">
+        <input type="date" id="end-date" placeholder="End Date">
+        <select id="delivery-agent">
+            <option value="">All Agents</option>
+            <option value="agent1">Agent 1</option>
+            <option value="agent2">Agent 2</option>
+        </select>
+        <button>Apply Filters</button>
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <h3>Average Delivery Time</h3>
+            <p>30 mins</p>
+        </div>
+        <div class="card">
+            <h3>On-Time Delivery Rate</h3>
+            <p>85%</p>
+        </div>
+        <div class="card">
+            <h3>Total Deliveries</h3>
+            <p>150</p>
+        </div>
+    </div>
+
+    <div class="chart-container">
+        <div class="chart-description">
+            <strong>Delivery Trend:</strong> Track the average delivery time over the past months.
+        </div>
+        <canvas id="deliveryTrendChart"></canvas>
+    </div>
+    <div class="chart-container">
+        <div class="chart-description">
+            <strong>On-Time Delivery Rate:</strong> Monitor the percentage of deliveries made on time.
+        </div>
+        <canvas id="onTimeDeliveryChart"></canvas>
+    </div>
+
+    <script>
+        // Delivery Trend Chart
+        const deliveryTrendCtx = document.getElementById('deliveryTrendChart').getContext('2d');
+        new Chart(deliveryTrendCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Average Delivery Time (mins)',
+                    data: [30, 28, 32, 29, 31, 27],
+                    borderColor: '#fc8019',
+                    fill: false,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Minutes'
+                        }
+                    }
+                }
+            }
+        });
+
+        // On-Time Delivery Rate Chart
+        const onTimeDeliveryCtx = document.getElementById('onTimeDeliveryChart').getContext('2d');
+        new Chart(onTimeDeliveryCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['On Time', 'Late'],
+                datasets: [{
+                    data: [85, 15],
+                    backgroundColor: ['#fc8019', '#e2e2e2'],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                }
+            }
+        });
+    </script>
+</body>
+</html>

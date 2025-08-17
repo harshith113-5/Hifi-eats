@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery KPI Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fff7e6;
+            color: #333;
+        }
+        header {
+            background: #ff6f00;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+        header .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        header nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+            margin: 0;
+            padding: 0;
+        }
+        header nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+        header nav ul li a:hover {
+            color: #ffe0b2;
+        }
+        .dashboard-container {
+            max-width: 1100px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #ffe4c4;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+        }
+        h1 {
+            color: #ff6f00;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        #charts-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .chart-container {
+            background-color: #fff7e6;
+            border: 1px solid #ff6f00;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        table {
+            width: 100%;
+            margin-top: 30px;
+            border-collapse: collapse;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #ff6f00;
+            color: white;
+        }
+        tbody tr:nth-child(even) {
+            background-color: #fff3e0;
+        }
+        tbody tr:hover {
+            background-color: #ffe0b2;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">HIFI DELIVERY ADMIN</div>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('admin') }}"><i class="fa-solid fa-house"></i> Home</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="dashboard-container">
+        <h1>📊 Delivery KPI Dashboard</h1>
+        <div id="charts-container">
+            <div class="chart-container">
+                <canvas id="deliveryChart"></canvas>
+            </div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Month</th>
+                    <th>Average Delivery Time (min)</th>
+                    <th>On-Time Delivery Rate (%)</th>
+                    <th>Total Deliveries</th>
+                </tr>
+            </thead>
+            <tbody id="kpiData"></tbody>
+        </table>
+    </main>
+
+    <script>
+        const deliveryChartCtx = document.getElementById('deliveryChart').getContext('2d');
+        let deliveryChart;
+
+        function fetchKPIData() {
+            fetch('/delivery_kpi', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    updateChart(data.monthly);
+                    updateTable(data.monthly);
+                })
+                .catch(error => console.error('Error fetching KPI data:', error));
+        }
+
+        function updateChart(monthlyData) {
+            const labels = monthlyData.map(item => item.month);
+            const avgDeliveryTimes = monthlyData.map(item => item.avg_delivery_time);
+            const onTimeRates = monthlyData.map(item => item.on_time_delivery_rate);
+
+            if (deliveryChart) deliveryChart.destroy();
+
+            deliveryChart = new Chart(deliveryChartCtx, {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [
+                        {
+                            label: 'Avg Delivery Time (min)',
+                            data: avgDeliveryTimes,
+                            borderColor: '#ff5722',
+                            backgroundColor: '#ff5722',
+                            borderWidth: 2,
+                            pointBackgroundColor: '#ff5722',
+                            pointRadius: 5,
+                        },
+                        {
+                            label: 'On-Time Delivery Rate (%)',
+                            data: onTimeRates,
+                            borderColor: '#4caf50',
+                            backgroundColor: '#4caf50',
+                            borderWidth: 2,
+                            pointBackgroundColor: '#4caf50',
+                            pointRadius: 5,
+                        },
+                    ],
+                },
+                options: {
+                    scales: {
+                        x: { title: { display: true, text: 'Month' } },
+                        y: { title: { display: true, text: 'KPI Value' } },
+                    },
+                },
+            });
+        }
+
+        function updateTable(monthlyData) {
+            const kpiDataTable = document.getElementById('kpiData');
+            kpiDataTable.innerHTML = monthlyData.map(item => `
+                <tr>
+                    <td>${item.month}</td>
+                    <td>${item.avg_delivery_time.toFixed(2)}</td>
+                    <td>${item.on_time_delivery_rate.toFixed(2)}</td>
+                    <td>${item.total_deliveries}</td>
+                </tr>
+            `).join('');
+        }
+
+        fetchKPIData();
+    </script>
+</body>
+</html>

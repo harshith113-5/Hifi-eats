@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rate & Review Orders</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .feedback-container {
+            flex: 1; /* Allows the content to grow and push the footer to the bottom */
+            padding: 25px;
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        h1 {
+            color: #fc8019;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .order-section {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 20px;
+        }
+
+        .order-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .order-header h2 {
+            font-size: 1.2rem;
+            color: #333;
+        }
+
+        .order-header span {
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        .order-date {
+            font-size: 0.8rem;
+            color: #888;
+            text-align: right;
+            margin-bottom: 10px;
+        }
+
+        .total-amount {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #333;
+            margin-top: 10px;
+        }
+
+        .items-heading {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .items-list {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #333;
+        }
+
+        .items-list ul {
+            padding-left: 20px;
+        }
+
+        .items-list li {
+            margin-bottom: 5px;
+        }
+
+        .rating {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .rating label {
+            cursor: pointer;
+            font-size: 30px;
+            color: white;
+            background-color: #ccc;
+            padding: 10px;
+            border-radius: 50%;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .rating label:hover {
+            background-color: #fc8019;
+            transform: scale(1.2);
+        }
+
+        .rating label.active {
+            background-color: #fc8019;
+        }
+
+        .review textarea {
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 1rem;
+            color: #555;
+            resize: none;
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        .review textarea:focus {
+            border-color: #fc8019;
+        }
+
+        .submit-button {
+            text-align: right;
+            margin-top: 10px;
+        }
+
+        .submit-button button {
+            background-color: #fc8019;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .submit-button button:hover {
+            background-color: #e37013;
+            transform: scale(1.05);
+        }
+
+        .submit-button button:active {
+            transform: scale(1);
+        }
+
+        .thank-you-message {
+            text-align: center;
+            font-size: 1rem;
+            color: #28a745;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        header {
+            background: #ff5722;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            box-sizing: border-box;
+            position: sticky;
+            top: 0;
+        }
+
+        header .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        header nav ul {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+
+        header nav ul li {
+            margin: 0 15px;
+        }
+
+        header nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+        footer {
+            background: #ff5722;
+            color: white;
+            text-align: center;
+            padding: 15px 20px;
+            margin-top: auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        footer p {
+            margin: 0;
+        }
+        /* Add the same styles as in your existing code, with modifications for readonly feedback */
+        .readonly-feedback {
+            font-size: 1rem;
+            color: #555;
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+            padding: 12px;
+            border-radius: 8px;
+            resize: none;
+            width: 100%;
+            pointer-events: none; /* Disable editing */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">HIFI DELIVERY</div>
+        <nav>
+            <ul> 
+                <li><a href="{{ url_for('start') }}"><i class="fa-solid fa-user"></i> Home</a></li>
+                <li><a href="{{ url_for('viewprofile') }}"><i class="fa-solid fa-user"></i> Profile</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="feedback-container">
+        <h1>Rate & Review Your Orders</h1>
+        
+
+        {% for order in orders %}
+        <div class="order-section" data-order-id="{{ order['order_id'] }}">
+            <div class="order-header">
+                <h2>Order #{{ order['order_id'] }}</h2>
+                <span>{{ order['product_name'] }}</span>
+            </div>
+            <div class="order-date">{{ order['order_date'] }}</div>
+            <div class="total-amount">Total Amount: ₹{{ order['price'] }}</div>
+            <!-- Items Section Heading -->
+            <div class="items-heading">Items:</div>
+
+             <!-- Items List -->
+             <div class="items-list">
+                <ul>
+                    <li>{{ order['product_name'] }} - ₹{{ order['price'] }}</li>
+                </ul>
+            </div>
+            {% if order['feedback'] %}
+                <!-- Show existing review and rating in readonly format -->
+                <div class="readonly-feedback">
+                    <p><strong>Rating:</strong> {{ order['feedback']['rating'] }} stars</p>
+                    <p><strong>Review:</strong> {{ order['feedback']['review'] }}</p>
+                </div>
+            {% else %}
+
+            <div class="rating">
+                <label data-value="1">⭐</label>
+                <label data-value="2">⭐</label>
+                <label data-value="3">⭐</label>
+                <label data-value="4">⭐</label>
+                <label data-value="5">⭐</label>
+            </div>
+            <div class="review">
+                <textarea placeholder="Write your review here..." rows="3"></textarea>
+            </div>
+            <div class="submit-button">
+                <button type="button" class="submit-review">Submit Review</button>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+        
+
+    <script>
+        // Display Current Date and Time for Each Order
+        const orderSections = document.querySelectorAll('.order-section');
+        orderSections.forEach(order => {
+            const orderDateDiv = order.querySelector('.order-date');
+            const now = new Date();
+            const formattedDate = now.toLocaleString(); // e.g., "1/8/2025, 10:30:00 AM"
+            orderDateDiv.textContent = `Date & Time: ${formattedDate}`;
+        });
+
+        // Rating and Review Functionality
+        orderSections.forEach(order => {
+            const stars = order.querySelectorAll('.rating label');
+            const reviewTextarea = order.querySelector('.review textarea');
+            const submitButton = order.querySelector('.submit-review');
+            let selectedRating = 0;
+
+            // Star Rating Logic
+            stars.forEach(star => {
+                star.addEventListener('click', () => {
+                    selectedRating = star.dataset.value;
+                    resetStars(stars);
+                    highlightStars(stars, selectedRating);
+                });
+            });
+
+            function resetStars(stars) {
+                stars.forEach(star => star.classList.remove('active'));
+            }
+
+            function highlightStars(stars, rating) {
+                stars.forEach(star => {
+                    if (star.dataset.value <= rating) {
+                        star.classList.add('active');
+                    }
+                });
+            }
+
+            // Submit feedback to the server
+            submitButton.addEventListener('click', () => {
+                const orderId = order.dataset.orderId;
+                const reviewText = reviewTextarea.value.trim();
+
+                if (selectedRating === 0) {
+                    alert(`Please select a rating for Order #${orderId}`);
+                    return;
+                }
+
+                if (reviewText === '') {
+                    alert(`Please write a review for Order #${orderId}`);
+                    return;
+                }
+
+                // Prepare feedback data
+                const feedbackData = {
+                    order_id: orderId,
+                    rating: selectedRating,
+                    review: reviewText
+                };
+
+                // Send feedback to the server
+                fetch('/submit-feedback', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(feedbackData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(`Error: ${data.error}`);
+                    } else {
+                        alert(data.message);
+
+                        // Display thank-you message and disable further editing
+                        const thankYouMessage = document.createElement('div');
+                        thankYouMessage.classList.add('thank-you-message');
+                        thankYouMessage.textContent = 'Thank you for your feedback!';
+                        order.appendChild(thankYouMessage);
+
+                        stars.forEach(star => {
+                            star.style.pointerEvents = 'none';
+                        });
+                        reviewTextarea.disabled = true;
+                        submitButton.disabled = true;
+                        submitButton.style.cursor = 'not-allowed';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while submitting feedback.');
+              });
+    });
+});
+    </script>
+    <footer>
+        <p>&copy; 2023 HIFI Delivery. All rights reserved.</p>
+    </footer>
+</body>
+</html>
+

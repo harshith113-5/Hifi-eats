@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <title>Signup Page</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      background: url("{{url_for('static',filename='img.jpg')}}") no-repeat center center fixed;
+      background-size: cover;
+    }
+
+    .container {
+      display: flex;
+      justify-content: flex-end; /* Align signup box to the right */
+      align-items: center;
+      width: 100%;
+      padding: 20px;
+    }
+
+    .form-container {
+      width: 100%;
+      max-width: 400px;
+      background: rgba(255, 255, 255, 0.9); /* Lightly transparent white background */
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+      backdrop-filter: blur(10px); /* Frosted glass effect */
+      position: relative;
+    }
+
+    .form-container h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 26px;
+      color: #fc8019; /* Swiggy orange */
+      font-weight: bold;
+    }
+
+    .form-container label {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 8px;
+      color: #555; /* Neutral gray for labels */
+    }
+
+    .form-container select, 
+    .form-container input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd; /* Light gray border */
+      border-radius: 4px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.3s, box-shadow 0.3s;
+      position: relative;
+    }
+
+    .form-container select:focus,
+    .form-container input:focus {
+      border-color: #fc8019; /* Swiggy orange on focus */
+      box-shadow: 0 0 4px rgba(252, 128, 25, 0.5); /* Subtle orange glow */
+    }
+
+    .form-container .password-container {
+      position: relative;
+      width: 100%;
+    }
+
+    .form-container .password-container input {
+      padding-right: 30px; /* Extra space for the eye icon */
+    }
+
+    .form-container .toggle-password {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #aaa; /* Light gray color for the icon */
+    }
+
+    .form-container button {
+      width: 100%;
+      padding: 12px;
+      background-color: #fc8019; /* Swiggy orange button */
+      color: #fff;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+
+    .form-container button:hover {
+      background-color: #d96e17; /* Darker orange on hover */
+      transform: translateY(-2px); /* Lift effect */
+    }
+
+    .form-container button:active {
+      transform: translateY(0); /* Reset lift effect */
+    }
+
+    .form-container .login-link {
+      text-align: center;
+      margin-top: 15px;
+    }
+    .form-container p {
+      font-size: 14px;
+      color: #555; /* Neutral gray for readability */
+      background: rgba(252, 128, 25, 0.1); /* Light orange background */
+      border-left: 4px solid #fc8019; /* Orange left border for emphasis */
+      padding: 10px;
+      border-radius: 4px;
+      margin-top: -10px; /* To slightly overlap the input above */
+      margin-bottom: 15px; /* Proper spacing after the paragraph */
+      font-style: italic; /* Subtle differentiation */
+      line-height: 1.5;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+    }
+
+    #password-hint {
+      font-size: 14px;
+      color: #fc8019; /* Default orange for instructions */
+      margin-top: -10px;
+      margin-bottom: 15px;
+      line-height: 1.5;
+      font-style: italic;
+    }
+
+    .form-container .login-link a {
+      color: #fc8019; /* Swiggy orange for links */
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+
+    .form-container .login-link a:hover {
+      color: #d96e17; /* Darker orange on hover */
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        justify-content: center; /* Center the signup box on smaller screens */
+      }
+
+      .form-container {
+        margin: 20px;
+      }
+    }
+
+    .flash-container {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+    }
+
+    .flash-message {
+      background-color: #f44336;
+      color: white;
+      padding: 15px;
+      margin: 10px;
+      border-radius: 5px;
+      text-align: center;
+      font-size: 16px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .flash-message.success {
+      background-color: #4CAF50;
+    }
+
+    .flash-message.danger {
+      background-color: #f44336;
+    }
+
+    .flash-message p {
+      margin: 0;
+    }
+
+    .flash-message {
+      display: block;
+      animation: fadeInOut 3s forwards;
+    }
+
+    #password-hint.green {
+      color: green;
+    }
+
+    #password-hint.orange {
+      color: orange;
+    }
+
+    #password-hint.red {
+      color: red;
+    }
+
+  </style>
+</head>
+<body>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  <div class="flash-container">
+    {% for category, message in messages %}
+    <div class="flash-message {{ category }}">
+      <p>{{ message }}</p>
+    </div>
+    {% endfor %}
+  </div>
+  <script>
+    setTimeout(function() {
+      const flashContainer = document.querySelector('.flash-container');
+      if (flashContainer) {
+        flashContainer.style.transition = "opacity 0.5s ease";
+        flashContainer.style.opacity = "0";
+        setTimeout(() => flashContainer.remove(), 500); 
+      }
+    }, 5000); 
+  </script>
+  {% endif %}
+  {% endwith %}
+  <div class="container">
+    <div class="form-container">
+      <h1>Create an Account</h1>
+      <form action="{{ url_for('register') }}" method="POST">
+        <label for="name">Username</label>
+        <input type="text" id="name" name="username" placeholder="Enter your full name" required>
+        
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+
+        <label for="role">Role</label>
+        <select id="role" name="role" required>
+          <option value="customer">Customer</option>
+          <option value="deliveryagent">Delivery Agent</option>
+        </select>
+        
+        <label for="password">Password</label>
+        <div class="password-container">
+          <input type="password" id="password" name="password" placeholder="Choose a password" required>
+          <span id="toggle-password" class="toggle-password"><i class="fas fa-eye"></i></span>
+        </div>
+        
+        <p id="password-hint">
+          Password must be at least 8 characters long and include at least one letter, one digit, and one special character.
+        </p>
+        
+        <label for="confirm-password">Confirm Password</label>
+        <div class="password-container">
+          <input type="password" id="confirm-password" name="confirm_password" placeholder="Re-enter your password" required>
+          <span id="toggle-password" class="toggle-password"><i class="fas fa-eye"></i></span>
+        </div>
+
+        <label for="location">Location</label>
+        <input type="text" id="location" name="location" placeholder="Location" required>
+
+        <label for="contact">Contact</label>
+        <input type="number" id="contact" name="contact" placeholder="contact" required>
+        <button type="submit">Sign Up</button>
+      </form>
+      <div class="login-link">
+        Already have an account? <a href="{{ url_for('login') }}">Login</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const passwordInput = document.getElementById("password");
+      const confirmPasswordInput = document.getElementById("confirm-password");
+      const passwordHint = document.getElementById("password-hint");
+  
+      passwordInput.addEventListener("input", () => {
+        const password = passwordInput.value;
+  
+        const hasLetter = /[a-zA-Z]/.test(password);
+        const hasDigit = /\d/.test(password);
+        const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+        const isLongEnough = password.length >= 8;
+  
+        if (hasLetter && hasDigit && hasSpecial && isLongEnough) {
+          passwordHint.style.color = "green";
+          passwordHint.textContent = "Password is strong!";
+        } else if (
+          (hasLetter && hasDigit && isLongEnough) ||
+          (hasLetter && hasSpecial && isLongEnough) ||
+          (hasDigit && hasSpecial && isLongEnough)
+        ) {
+          passwordHint.style.color = "orange";
+          passwordHint.textContent = "Password is moderate.";
+        } else {
+          passwordHint.style.color = "red";
+          passwordHint.textContent = "Password is weak.";
+        }
+      });
+  
+      confirmPasswordInput.addEventListener("input", () => {
+        if (confirmPasswordInput.value !== passwordInput.value) {
+          confirmPasswordInput.setCustomValidity("Passwords do not match!");
+        } else {
+          confirmPasswordInput.setCustomValidity("");
+        }
+      });
+    });
+
+    document.querySelectorAll(".toggle-password").forEach(function (toggle) {
+      toggle.addEventListener("click", function () {
+        var passwordField = toggle.previousElementSibling;
+        var icon = toggle.querySelector("i");
+
+        if (passwordField.type === "password") {
+          passwordField.type = "text";
+          icon.classList.remove("fa-eye");
+          icon.classList.add("fa-eye-slash");
+        } else {
+          passwordField.type = "password";
+          icon.classList.remove("fa-eye-slash");
+          icon.classList.add("fa-eye");
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Delivery Performance</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff3e6; /* Light orange background */
+            padding: 20px;
+            color: #333; /* Dark text for contrast */
+        }
+        .chart-container {
+            width: 80%;
+            margin: 20px auto;
+            text-align: center;
+        }
+        img {
+            width: 80%;
+            max-width: 800px;
+        }
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: #fff; /* White table background */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #ff8c42; /* Orange header */
+            color: #fff; /* White text */
+        }
+        tbody tr:hover {
+            background-color: #ffe5d4; /* Light orange hover */
+        }
+        .flash-container {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+
+        .flash-message {
+            background-color: #ff8c42; /* Orange background */
+            color: white;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .flash-message.success {
+            background-color: #4CAF50; /* Green background for success */
+        }
+
+        .flash-message.danger {
+            background-color: #f44336; /* Red background for error */
+        }
+
+        .flash-message p {
+            margin: 0;
+        }
+
+        /* Hide the flash message after 3 seconds */
+        .flash-message {
+            display: block;
+            animation: fadeInOut 3s forwards;
+        }
+
+        h1, h2, h3 {
+            color: #ff8c42; /* Orange headings */
+        }
+    </style>
+</head>
+<body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-container">
+        {% for category, message in messages %}
+        <div class="flash-message {{ category }}">
+            <p>{{ message }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    <script>
+        // Automatically hide flash messages after 5 seconds
+        setTimeout(function() {
+            const flashContainer = document.querySelector('.flash-container');
+            if (flashContainer) {
+                flashContainer.style.transition = "opacity 0.5s ease";
+                flashContainer.style.opacity = "0";
+                setTimeout(() => flashContainer.remove(), 500); // Remove after fade-out
+            }
+        }, 5000); // 5 seconds
+    </script>
+    {% endif %}
+    {% endwith %}
+
+    <h1>Food Delivery Agent Performance</h1>
+
+    <!-- Performance Data Table -->
+    <h2>Performance Data</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Month</th>
+                <th>Orders Delivered</th>
+                <th>On-Time Deliveries</th>
+                <th>Customer Ratings</th>
+                <th>Cancellation Rate</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in performance_table_data %}
+            <tr>
+                <td>{{ data.month }}</td>
+                <td>{{ data.orders }}</td>
+                <td>{{ data.on_time }}</td>
+                <td>{{ data.ratings }}</td>
+                <td>{{ data.cancellations }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h3>Bar Chart</h3>
+    {% if bar_chart_filename %}
+    <img src="{{ url_for('static', filename='images/' + bar_chart_filename) }}" alt="Bar Chart">
+    {% else %}
+    <p>Bar chart is not available.</p>
+    {% endif %}
+
+    <h3>Line Chart</h3>
+    {% if line_chart_filename %}
+    <img src="{{ url_for('static', filename='images/' + line_chart_filename) }}" alt="Line Chart">
+    {% else %}
+    <p>Line chart is not available.</p>
+    {% endif %}
+</body>
+</html>

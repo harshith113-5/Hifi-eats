@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USER DETAILS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            background-image: url('background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        marquee {
+            background-color: rgba(255, 87, 34, 0.8);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 10px;
+            border: 2px solid rgba(230, 74, 25, 0.8);
+            border-radius: 5px;
+            width: 100%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .form-container {
+            max-width: 90%;
+            margin: 20px auto;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        .form-header {
+            background-color: rgba(255, 87, 34, 0.9);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .form-header h2 {
+            margin: 0;
+        }
+        .form-header .home-btn {
+            background-color: rgba(243, 248, 249, 0.9);
+            color: rgb(25, 24, 24);
+            border: none;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        .form-header .home-btn:hover {
+            background-color: rgba(168, 192, 198, 0.9);
+        }
+        .form-body {
+            padding: 20px;
+        }
+        .form-body label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        .form-body input, .form-body button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .form-body button {
+            background-color: rgba(255, 87, 34, 0.9);
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .form-body button:hover {
+            background-color: rgba(230, 74, 25, 0.9);
+        }
+        .form-body button:disabled {
+            background-color: rgba(100, 100, 100, 0.8);
+            cursor: not-allowed;
+        }
+        footer {
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        /* Media Query for Mobile */
+        @media (max-width: 480px) {
+            .form-container {
+                max-width: 95%;
+                margin: 10px auto;
+            }
+            .form-body {
+                padding: 15px;
+            }
+            .form-body input, .form-body button {
+                padding: 8px;
+                margin-bottom: 10px;
+            }
+            .form-header {
+                flex-direction: column;
+                padding: 15px;
+            }
+        }
+
+        /* Media Query for Windows (Desktop) */
+        @media (min-width: 481px) and (max-width: 768px) {
+            .form-container {
+                max-width: 80%;
+            }
+            .form-body {
+                padding: 15px;
+            }
+            .form-body input, .form-body button {
+                padding: 8px;
+                margin-bottom: 12px;
+            }
+            .form-header {
+                flex-direction: column;
+                padding: 15px;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .form-container {
+                max-width: 60%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <marquee>
+        Ensure that you are giving the correct details
+    </marquee>
+    <div class="form-container">
+        <div class="form-header">
+            <h2>Profile</h2>
+            <button class="home-btn" onclick="goToHome()">Home</button>
+        </div>
+        <div class="form-body">
+            <h2>Update Your Details</h2>
+
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            <div class="flash-container">
+                {% for category, message in messages %}
+                <div class="flash-message {{ category }}">
+                    <p>{{ message }}</p>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endwith %}
+
+            <form method="POST" class="input-group">
+                <label for="username">Username:</label>
+                <input type="text" class="input-field" id="username" name="username" value="{{ user['username'] }}" required>
+
+                <label for="email">Email:</label>
+                <input type="email" class="input-field" id="email" name="email" value="{{ user['email'] }}" required>
+
+                <label for="role">Role:</label>
+                <input type="text" class="input-field" id="role" name="role" value="{{ user['role'] }}" required>
+
+                <label for="location">Location:</label>
+                <input type="text" class="input-field" id="location" name="location" value="{{ user['location'] }}" required>
+
+                <label for="contact">Contact:</label>
+                <input type="text" class="input-field" id="contact" name="contact" value="{{ user['contact'] }}" required>
+
+                <button type="submit" class="submit-btn">Update</button>
+            </form>
+
+            <a href="{{ url_for('start') }}" class="back-btn">Back to Dashboard</a>
+        </div>
+    </div>
+
+    <footer>
+        HiFi Delivery App
+    </footer>
+
+    <script>
+        function goToHome() {
+            window.location.href = "{{ url_for('start') }}"; // Change this to your homepage URL
+        }
+
+        function getLiveLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(fetchAddress, showError);
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        function fetchAddress(position) {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+
+            const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const address = data.display_name || "Address not found";
+                    document.getElementById('location').value = address;
+                    document.querySelector('button[type="submit"]').disabled = false; // Enable submit button
+                })
+                .catch(error => {
+                    alert("Unable to fetch location. Please try again.");
+                    console.error("Error fetching address:", error);
+                });
+        }
+
+        function showError(error) {
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    alert("User denied the request for Geolocation.");
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    alert("Location information is unavailable.");
+                    break;
+                case error.TIMEOUT:
+                    alert("The request to get user location timed out.");
+                    break;
+                default:
+                    alert("An unknown error occurred.");
+                    break;
+            }
+        }
+
+        function validateForm() {
+            const phone = document.getElementById('phone').value;
+            const email = document.getElementById('email').value;
+
+            // Validate phone number
+            if (!/^\d+$/.test(phone)) {
+                alert("Phone number should only contain numbers.");
+                return false;
+            }
+
+            // Validate email
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                alert("Please enter a valid email address.");
+                return false;
+            }
+
+            return true;
+        }
+
+        function editProfile() {
+            document.getElementById('name').removeAttribute('readonly');
+            document.getElementById('email').removeAttribute('readonly');
+            document.getElementById('phone').removeAttribute('readonly');
+            document.getElementById('location').removeAttribute('readonly');
+        }
+    </script>
+</body>
+</html>

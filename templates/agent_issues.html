@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Issues</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        main {
+            flex: 1;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        header {
+            background: #ff5722;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        header .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        header nav ul {
+            list-style: none;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        header nav ul li a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        header nav ul li a i {
+            margin-right: 5px;
+        }
+
+        .table-container {
+            background-color: #ffe4c4; /* Light peach background */
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            width: 90%;
+            max-width: 1100px;
+        }
+
+        h1 {
+            font-family: 'Arial', sans-serif;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: rgb(243, 126, 53);
+            color: #fff;
+            text-transform: uppercase;
+        }
+
+        td {
+            background-color: #f9f9f9;
+        }
+
+        tr:nth-child(even) td {
+            background-color: #ecf0f1;
+        }
+
+        tr:hover td {
+            background-color: rgb(249, 196, 171);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">HIFI DELIVERY ADMIN</div>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('admin')}}"><i class="fa-solid fa-house"></i> Home</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Delivery Agent Issues Table -->
+        <section class="table-container">
+            <h1>Delivery Agent Issues</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Agent</th>
+                        <th>Order ID</th>
+                        <th>Issue Type</th>
+                        <th>Issue Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for issue in agent_issues %}
+                    <tr>
+                        <td>{{ issue[0] }}</td> <!-- ID -->
+                        <td>{{ issue[1] }}</td> <!-- Agent -->
+                        <td>{{ issue[2] }}</td> <!-- Order ID -->
+                        <td>{{ issue[3] }}</td> <!-- Issue Type -->
+                        <td>{{ issue[4] }}</td> <!-- Issue Details -->
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Customer Feedback Table -->
+        <section class="table-container">
+            <h1>Customer Feedback</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Message</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for feedback in customer_feedback %}
+                    <tr>
+                        <td>{{ feedback[0] }}</td> <!-- ID -->
+                        <td>{{ feedback[1] }}</td> <!-- Name -->
+                        <td>{{ feedback[2] }}</td> <!-- Email -->
+                        <td>{{ feedback[3] }}</td> <!-- Message -->
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 HIFI DELIVERY. All Rights Reserved.</p>
+    </footer>
+
+</body>
+</html>

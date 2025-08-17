@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Delivery Status</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f5f5f5;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.user-info {
+    text-align: right;
+    margin-bottom: 20px;
+}
+
+.logout-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    margin-left: 10px;
+}
+
+.delivery-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    margin-bottom: 20px;
+}
+
+.delivery-table th, .delivery-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.delivery-table th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+}
+
+.status-select {
+    padding: 6px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.update-btn {
+    background-color: #FF7F00;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.update-btn:hover {
+    background-color: #E06400;
+}
+
+.success-message {
+    color: #228B22;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    display: none;
+}
+
+.header-container h1 {
+    color: #FF7F00;
+}
+        </style>
+</head>
+<body>
+    <div class="header-container">
+        <h1>Delivery Status Updates</h1>
+        <div class="user-info">
+            <span>Welcome, {{ session['username'] }}</span>
+            <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+        </div>
+    </div>
+    
+    <div id="success-message" class="success-message">Status updated successfully!</div>
+    <table class="delivery-table">
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Pickup Time</th>
+                <th>Scheduled Time</th>
+                <th>Current Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="deliveryTableBody">
+            <!-- Data will be populated dynamically -->
+        </tbody>
+    </table>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', fetchDeliveries);
+
+        function formatDateTime(dateTimeStr) {
+            if (!dateTimeStr) return 'Not scheduled';
+            try {
+                const date = new Date(dateTimeStr);
+                return date.toLocaleString();
+            } catch (e) {
+                return dateTimeStr;
+            }
+        }
+
+        function fetchDeliveries() {
+            fetch('/get_deliveries')
+                .then(response => {
+                    if (response.redirected) {
+                        window.location.href = response.url;
+                        return;
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (!data) return;
+                    const tableBody = document.getElementById('deliveryTableBody');
+                    tableBody.innerHTML = '';
+                    
+                    data.forEach(delivery => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${delivery.orderId}</td>
+                            <td>${formatDateTime(delivery.pickupTime)}</td>
+                            <td>${formatDateTime(delivery.scheduledTime)}</td>
+                            <td>
+                                <select class="status-select" id="status-${delivery.id}">
+                                    <option value="Pending" ${delivery.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                                    <option value="Picked Up" ${delivery.status === 'Picked Up' ? 'selected' : ''}>Picked Up</option>
+                                    <option value="Delivered" ${delivery.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
+                                    <option value="Cancelled" ${delivery.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+                                </select>
+                            </td>
+                            <td>
+                                <button class="update-btn" onclick="updateStatus(${delivery.id})">Update</button>
+                            </td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    if (error.status === 401) {
+                        window.location.href = '/login';
+                    }
+                });
+        }
+
+        function updateStatus(deliveryId) {
+            const status = document.getElementById(`status-${deliveryId}`).value;
+            
+            fetch('/update_status', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    delivery_id: deliveryId,
+                    status: status
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const successMessage = document.getElementById('success-message');
+                    successMessage.style.display = 'block';
+                    setTimeout(() => {
+                        successMessage.style.display = 'none';
+                    }, 3000);
+                    fetchDeliveries();
+                } else {
+                    alert(data.error || 'Failed to update status');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                if (error.status === 401) {
+                    window.location.href = '/login';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Top-Selling Menu Items Dashboard</title>
+
+  <!-- CSS Styling -->
+  <style>
+    /* General Page Styling */
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f5f7fa;
+      margin: 0;
+      padding: 0;
+      color: #333;
+      background-image: url(kpi1.jpg);
+    }
+
+    /* Navbar Styling */
+    .navbar {
+      background-color: #343a40;
+      padding: 15px;
+      color: white;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    /* Content Section */
+    .content {
+      max-width: 1200px;
+      margin: 30px auto;
+      text-align: center;
+      color: red;
+    }
+
+    h2 {
+      color: #007bff;
+    }
+
+    /* Time Period Selection */
+    .time-period {
+      margin-bottom: 30px;
+    }
+
+    .time-period select {
+      padding: 10px;
+      font-size: 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+
+    /* Food Item Cards */
+    .food-item-cards {
+      display: flex;
+      justify-content: space-around;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .food-item-card {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      width: 250px;
+      text-align: center;
+      color: #333;
+    }
+
+    .food-item-card h3 {
+      color: #007bff;
+    }
+
+    .food-item-card span {
+      font-size: 22px;
+      color: #007bff;
+      display: block;
+      margin-top: 10px;
+    }
+
+    /* Top-Selling Result */
+    #top-selling-result {
+      margin-top: 30px;
+    }
+
+    #top-selling-result h3 {
+      color: #007bff;
+    }
+
+    /* Button Styling */
+    button {
+      background-color: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    /* Footer */
+    footer {
+      background-color: #343a40;
+      color: white;
+      text-align: center;
+      padding: 10px 0;
+      position: relative;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    Top-Selling Menu Items Dashboard
+  </div>
+
+  <!-- Content Section -->
+  <div class="content">
+    <h2>Optimize Inventory & Promotions</h2>
+    <p>Track top-selling menu items on a daily, weekly, or monthly basis to optimize stock and improve promotional strategies.</p>
+
+    <!-- Time Period Selection -->
+    <div class="time-period">
+      <label for="time-period-select">Select Time Period: </label>
+      <select id="time-period-select">
+        <option value="daily">Daily</option>
+        <option value="weekly">Weekly</option>
+        <option value="monthly">Monthly</option>
+      </select>
+    </div>
+
+    <!-- Food Item Cards -->
+    <div class="food-item-cards">
+      <div class="food-item-card">
+        <h3>BURGER</h3>
+        <span id="burger-sales">₹0</span>
+      </div>
+      <div class="food-item-card">
+        <h3>PIZZA</h3>
+        <span id="pizza-sales">₹0</span>
+      </div>
+      <div class="food-item-card">
+        <h3>PASTA</h3>
+        <span id="pasta-sales">₹0</span>
+      </div>
+    </div>
+
+    <!-- Top-Selling Item Display -->
+    <div id="top-selling-result" style="display: none;">
+      <h3>Top-Selling Menu Item:</h3>
+      <div class="food-item-card">
+        <strong id="top-item-name">Loading...</strong>
+      </div>
+    </div>
+
+    <!-- Show Top-Selling Button -->
+    <button onclick="showTopSellingItem()">Show Top-Selling Item</button>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    &copy; 2025 Menu Performance Dashboard
+  </footer>
+
+  <!-- JavaScript for Dynamic Interaction -->
+  <script>
+    // Sales data for each menu item (Daily, Weekly, Monthly)
+    const salesData = {
+      "BURGER": {
+        "daily": 1500,
+        "weekly": 10500,
+        "monthly": 45000
+      },
+      "PIZZA": {
+        "daily": 1600,
+        "weekly": 11200,
+        "monthly": 48000
+      },
+      "PASTA": {
+        "daily": 1400,
+        "weekly": 9800,
+        "monthly": 42000
+      }
+    };
+
+    // Function to update sales data on cards based on selected time period
+    function updateSalesData(timePeriod) {
+      document.getElementById("burger-sales").innerText = `₹${salesData["BURGER"][timePeriod]}`;
+      document.getElementById("pizza-sales").innerText = `₹${salesData["PIZZA"][timePeriod]}`;
+      document.getElementById("pasta-sales").innerText = `₹${salesData["PASTA"][timePeriod]}`;
+    }
+
+    // Function to display the top-selling item for the selected time period
+    function showTopSellingItem() {
+      const timePeriod = document.getElementById("time-period-select").value;
+      
+      // Find the top-selling item for the selected period
+      let topItem = Object.keys(salesData).reduce((a, b) => salesData[a][timePeriod] > salesData[b][timePeriod] ? a : b);
+      
+      // Display the top-selling item
+      document.getElementById("top-item-name").innerText = `${topItem} - $${salesData[topItem][timePeriod]}`;
+      document.getElementById("top-selling-result").style.display = "block";
+    }
+
+    // Event listener to update the sales data when the time period is changed
+    document.getElementById("time-period-select").addEventListener("change", function() {
+      const timePeriod = this.value;
+      updateSalesData(timePeriod);
+    });
+
+    // Initialize the page with default sales data (daily)
+    updateSalesData("daily");
+  </script>
+
+</body>
+</html>

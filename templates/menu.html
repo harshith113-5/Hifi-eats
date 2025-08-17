@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Menu</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>/* Header animation */
+        header {
+            animation: slideInHeader 1s ease-out forwards;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        @keyframes slideInHeader {
+            0% {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        /* Horizontal scroll animation for description */
+        .description {
+            font-size: 1.2rem;
+            font-weight: 400;
+            color: #555;
+            margin-top: 10px;
+            white-space: nowrap;
+            display: inline-block;
+            animation: slideHorizontal 10s linear infinite;
+        }
+        
+        @keyframes slideHorizontal {
+            0% {
+                transform: translateX(100%);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+        
+        /* Cart button animation */
+        #cartButton {
+            animation: bounceIn 1s ease infinite;
+        }
+        
+        @keyframes bounceIn {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        /* Filter section styling */
+        
+        :root {
+    --primary: #ff6b35;
+    --primary-light: #ff8c5f;
+    --primary-dark: #e85a2c;
+    --primary-shadow: rgba(255, 107, 53, 0.2);
+}
+
+.filters {
+    background: white;
+    padding: 16px 24px;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(255, 107, 53, 0.08);
+    margin: 24px auto;
+    max-width: 1400px;
+    border: 1px solid rgba(255, 107, 53, 0.08);
+}
+
+.filter-container {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    overflow-x: auto;
+    padding: 4px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+}
+
+.filter-container::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
+}
+
+.filter-buttons-wrapper {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+}
+
+.filter-group:first-child::after {
+    content: '';
+    position: absolute;
+    right: -12px;
+    height: 24px;
+    width: 1px;
+    background: rgba(255, 107, 53, 0.15);
+}
+
+.filter-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border: 2px solid rgba(255, 107, 53, 0.15);
+    background: white;
+    border-radius: 50px;
+    color: #4b5563;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+    letter-spacing: 0.3px;
+}
+
+.filter-btn .icon {
+    width: 16px;
+    height: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.veg-icon {
+    border: 2px solid #22c55e;
+    border-radius: 3px;
+    position: relative;
+}
+
+.veg-icon::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: #22c55e;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.nonveg-icon {
+    border: 2px solid #ef4444;
+    border-radius: 3px;
+    position: relative;
+}
+
+.nonveg-icon::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: #ef4444;
+    clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.filter-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px var(--primary-shadow);
+}
+
+.filter-btn.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+    box-shadow: 0 4px 12px var(--primary-shadow);
+}
+
+.filter-btn.active:hover {
+    background: var(--primary-light);
+    transform: translateY(-1px);
+}
+
+.filter-btn.active .veg-icon,
+.filter-btn.active .nonveg-icon {
+    border-color: white;
+}
+
+.filter-btn.active .veg-icon::after,
+.filter-btn.active .nonveg-icon::after {
+    background: white;
+}
+
+@media (max-width: 768px) {
+    .filters {
+        padding: 12px;
+        margin: 16px;
+    }
+    
+    .filter-btn {
+        padding: 8px 16px;
+        font-size: 13px;
+    }
+}
+
+@keyframes filterAppear {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.filter-btn {
+    animation: filterAppear 0.3s ease-out forwards;
+}
+        
+        /* Other CSS included from the original inline styling */
+        </style>
+ <style>
+    /* Style for the home button */
+    #homeButton {
+        background-color: #22c55e; /* Green background */
+        color: white; /* White text */
+        padding: 10px 20px; /* Padding inside the button */
+        border: none; /* Remove default border */
+        border-radius: 5px; /* Rounded corners */
+        cursor: pointer; /* Pointer cursor on hover */
+        position: fixed; /* Fixed position to keep it in place */
+        top: 10px; /* Distance from the top */
+        left: 10px; /* Distance from the left */
+        font-size: 16px; /* Font size */
+    }
+
+    /* Hover effect for the button */
+    #homeButton:hover {
+        background-color: darkgreen; /* Darker green on hover */
+    }
+    #resetFiltersBtn {
+        background-color: #ff4d4d; /* Red background */
+        color: white; /* White text */
+        padding: 10px 20px; /* Padding inside the button */
+        border: none; /* Remove default border */
+        border-radius: 5px; /* Rounded corners */
+        cursor: pointer; /* Pointer cursor on hover */
+        font-size: 16px; /* Font size */
+        margin-left: 10px; /* Space between other buttons */
+    }
+
+    #resetFiltersBtn:hover {
+        background-color: #cc0000; /* Darker red on hover */
+    }
+    .quantity-controls {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-right: 10px;
+    }
+
+    .quantity-controls button {
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        padding: 5px 10px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    .quantity-controls button:hover {
+        background-color: #ddd;
+    }
+
+    .quantity-controls input {
+        width: 40px;
+        text-align: center;
+        border: 1px solid #ccc;
+        padding: 5px;
+        font-size: 14px;
+    }
+    .quantity-input {
+        width: 120px;
+        height:50px;
+        padding: 5px;
+        text-align: center;
+        font-size: 16px;
+        font-weight: bold;
+        border: 2px solid orange;  /* Orange border */
+        border-radius: 5px;
+        background-color: rgba(252, 149, 6, 0.923);  /* Orange background */
+        color: rgb(247, 241, 241);  /* White text */
+        outline: none;
+    }
+
+    .quantity-input:focus {
+        border-color: darkorange; /* Darker shade on focus */
+    }
+    .add-to-cart-container {
+            display: flex;
+            align-items: center; /* Vertically center items */
+            gap: 10px; /* Space between button and counter */
+        }
+        .add-to-cart-btn {
+            background-color: #ff8c42;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .add-to-cart-btn:hover {
+            background-color: #e67e22;
+        }
+</style>
+</head>
+<body>
+    <body>
+        <div class="container">
+            <header>
+                <h1>Restaurant Menu</h1>
+                <p class="description">Discover our delicious menu items, made with the finest ingredients and crafted with love!</p>
+    
+                <!-- Cart Button to navigate to cart page -->
+                <a href="{{ url_for('cart') }}"><button id="cartButton">Cart (0)</button></a>
+                <button id="homeButton" onclick="redirectToHome()">Home</button>
+            </header>
+    
+            <!-- Circular Image Slider -->
+            
+                <div class="slider">
+                    <div class="slide">
+                        <img src="{{ url_for('static', filename='uploads/curry.jpg') }}" alt="Food ">
+                        <p class="description">Delicious Food</p>
+                    </div>
+                    <div class="slide">
+                        <img src="{{ url_for('static', filename='uploads/biryani.jpg') }}" alt="Food ">
+                        <p class="description">Tasty Curry</p>
+                    </div>
+                    <div class="slide">
+                        <img src="{{ url_for('static', filename='uploads/chicken_noodles.jpg') }}" alt="Food">
+                        <p class="description">Savory Food </p>
+                    </div>
+                    <div class="slide">
+                        <img src="{{ url_for('static', filename='uploads/chicken_kabbab.jpg') }}" alt="Food ">
+                        <p class="description">Yummy Food </p>
+                    </div>
+                    <div class="slide">
+                        <img src="{{ url_for('static', filename='uploads/curry.jpg') }}" alt="Food ">
+                        <p class="description">Delicious Food</p>
+                    </div>
+                    <div class="slide">
+                        <img src="{{ url_for('static', filename='uploads/biryani.jpg') }}" alt="Food ">
+                        <p class="description">Tasty Curry</p>
+                    </div>
+                    <div class="slide">
+                        <img src="{{ url_for('static', filename='uploads/chicken_noodles.jpg') }}" alt="Food">
+                        <p class="description">Savory Food </p>
+                    </div>
+                    <div class="slide">
+    
+                        <img src="{{ url_for('static', filename='uploads/chicken_kabbab.jpg') }}" alt="Food ">
+                        <p class="description">Yummy Food </p>
+                    </div>
+                    
+                
+            </div>
+            <div class="filters">
+                <div class="filter-container">
+                    <div class="filter-group">
+                        
+                        <div class="filter-buttons-wrapper">
+                            <button class="filter-btn active" data-category="all">All Items</button>
+                            <button class="filter-btn" data-category="veg">
+                                <span class="icon veg-icon"></span>
+                                Vegetarian
+                            </button>
+                            <button class="filter-btn" data-category="non-veg">
+                                <span class="icon nonveg-icon"></span>
+                                Non-Vegetarian
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-group">
+                        
+                        <div class="filter-buttons-wrapper">
+                            <button class="filter-btn" data-subcategory="starter">Starters</button>
+                            <button class="filter-btn" data-subcategory="biryani">Biryani</button>
+                            <button class="filter-btn" data-subcategory="curries">Curries</button>
+                            <button class="filter-btn" data-subcategory="dessert">Dessert</button>
+                            <button class="filter-btn" data-subcategory="icecreams">Ice Creams</button>
+                            <button class="filter-btn" data-subcategory="beverages">Beverages</button>
+                            <button id="resetFiltersBtn">Reset Filters</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <section class="menu">
+                <!-- Menu items will be dynamically inserted here -->
+            </section>
+        </div>
+    
+        <script>
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            let activeCategory = 'all';
+            let activeSubcategory = 'all';
+    
+            // Handle filter button clicks
+            document.querySelectorAll('.filter-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const category = e.target.dataset.category;
+                    const subcategory = e.target.dataset.subcategory;
+                    
+                    if (category) {
+                        document.querySelectorAll('[data-category]').forEach(btn => 
+                            btn.classList.remove('active'));
+                        e.target.classList.add('active');
+                        activeCategory = category;
+                    }
+                    
+                    if (subcategory) {
+                        document.querySelectorAll('[data-subcategory]').forEach(btn => 
+                            btn.classList.remove('active'));
+                        e.target.classList.add('active');
+                        activeSubcategory = subcategory;
+                    }
+                    
+                    fetchMenuItems();
+                });
+            });
+    
+            async function fetchMenuItems() {
+                try {
+                    const url = new URL('http://127.0.0.1:5000/api/menu');
+                    
+                    if (activeCategory !== 'all') {
+                        url.searchParams.append('category', activeCategory);
+                    }
+                    if (activeSubcategory !== 'all') {
+                        url.searchParams.append('subcategory', activeSubcategory);
+                    }
+    
+                    const response = await fetch(url);
+                    const menuData = await response.json();
+    
+                    const menuSection = document.querySelector('.menu');
+                    menuSection.innerHTML = '';
+    
+                    menuData.forEach(item => {
+                        const menuItem = document.createElement('div');
+                        menuItem.classList.add('menu-item');
+    
+                        menuItem.innerHTML = `
+                            <img src="${item.image_path}" alt="${item.name}">
+                            <div class="info">
+                                <h3>${item.name}</h3>
+                                <p>${item.description}</p>
+                                <p class="price">${(item.price - item.discount).toFixed(2)}</p>
+                                ${item.discount > 0 ? `<p class="discount">${item.price.toFixed(2)}</p>` : ''}
+                               <div class="add-to-cart-container">
+                                   
+                                    <div class="quantity-controls">
+                                        <input type="number" class="quantity-input" value="1" min="1">
+                                    </div>
+                                     <button class="add-to-cart-btn" onclick="addToCart(${item.id}, '${item.name}', ${item.price}, this)">
+                                        Add to Cart
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+    
+                        menuSection.appendChild(menuItem);
+                    });
+                } catch (error) {
+                    console.error('Error fetching menu items:', error);
+                }
+            }
+    
+            function addToCart(itemId, itemName, itemPrice, button) {
+                const quantityInput = button.previousElementSibling.querySelector('.quantity-input');
+                const quantity = parseInt(quantityInput.value, 10);
+
+                const existingItem = cart.find(item => item.id === itemId);
+                if (existingItem) {
+                    existingItem.quantity += quantity;
+                } else {
+                    cart.push({ id: itemId, name: itemName, price: itemPrice, quantity: quantity });
+                }
+
+                // Save cart to localStorage
+                localStorage.setItem('cart', JSON.stringify(cart));
+                document.getElementById('cartButton').textContent = `Cart (${cart.length})`;
+                // Update the cart counter
+                //updateCartCounter();
+            }
+            
+    
+            window.onload = function() {
+                fetchMenuItems();
+                document.getElementById('cartButton').textContent = `Cart (${cart.length})`;
+            }
+            
+        </script>
+        <script>
+            // JavaScript function to redirect to the home page
+            function redirectToHome() {
+                // Replace 'index.html' with the path to your home page
+                window.location.href = '/home';
+            }
+            // Add event listener for the reset button
+            document.getElementById('resetFiltersBtn').addEventListener('click', () => {
+                resetFilters();
+            });
+
+            // Function to reset filters
+            function resetFilters() {
+                // Reset active category and subcategory
+                activeCategory = 'all';
+                activeSubcategory = 'all';
+
+                // Remove 'active' class from all filter buttons
+                document.querySelectorAll('.filter-btn').forEach(button => {
+                    button.classList.remove('active');
+                });
+
+                // Re-fetch menu items without filters
+                fetchMenuItems();
+            }
+            document.querySelectorAll('.quantity-controls').forEach(controls => {
+                const decrementBtn = controls.querySelector('.decrement-btn');
+                const incrementBtn = controls.querySelector('.increment-btn');
+                const quantityInput = controls.querySelector('.quantity-input');
+
+                decrementBtn.addEventListener('click', () => {
+                    if (quantityInput.value > 1) {
+                        quantityInput.value--;
+                    }
+                });
+
+                incrementBtn.addEventListener('click', () => {
+                    quantityInput.value++;
+                });
+            });
+        </script>
+    </body>
+    </html>

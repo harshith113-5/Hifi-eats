@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forgot Password</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background:  url("{{url_for('static',filename='img.jpg')}}") no-repeat center center fixed;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #444;
+        }
+
+        .container {
+            background: rgba(235, 211, 211, 0.9); /* Semi-transparent background */
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 400px;
+            margin-left: auto;  /* Align to the right */
+            margin-right: 0;    /* No margin on the right */
+        }
+        
+
+        h2 {
+            text-align: center;
+            color: #333333;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin: 8px 0 5px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #555555;
+        }
+
+        input {
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #cccccc;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            border-color: #0056b3;
+            box-shadow: 0 0 5px rgba(0, 91, 187, 0.2);
+            outline: none;
+        }
+
+        button {
+            padding: 12px;
+            font-size: 1rem;
+            background-color:rgb(239, 116, 22);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        button:hover {
+            background-color:rgb(215, 164, 109);
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .links {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        a {
+            font-size: 0.9rem;
+            color: #03181d;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        a:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            input, button {
+                font-size: 0.9rem;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Forgot Password</h2>
+        <form action="{{ url_for('forgot_password') }}" method="POST" onsubmit="return validatePasswords()">
+            <label for="identifier">Username or Email:</label>
+            <input type="text" id="identifier" name="identifier" placeholder="Enter your username or email" required>
+
+            
+            <label for="new_password">New Password:</label>
+            <input type="password" id="new_password" name="new_password" placeholder="Enter new password" required>
+
+            <label for="re_new_password">Re-enter New Password:</label>
+            <input type="password" id="re_new_password" name="re_new_password" placeholder="Re-enter new password" required>
+
+            <button type="submit">Reset Password</button>
+        </form>
+
+        <div class="links">
+            <a href="{{ url_for('login') }}"><b>Back to Login</b></a>
+        </div>
+    </div>
+
+    <script>
+        function validatePasswords() {
+            const newPassword = document.getElementById('new_password').value;
+            const reNewPassword = document.getElementById('re_new_password').value;
+
+            if (newPassword !== reNewPassword) {
+                alert('Passwords do not match.');
+                return false;
+            }
+            return true;
+        }
+        function resetPasswordSuccess() {
+            alert('Password reset successful. Please check your email.');
+        }
+    </script>
+</body>
+</html>

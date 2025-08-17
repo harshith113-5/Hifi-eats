@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+</head>
+<body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-container">
+        {% for category, message in messages %}
+        <div class="flash-message {{ category }}">
+            <p>{{ message }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    <script>
+        // Automatically hide flash messages after 5 seconds
+        setTimeout(function() {
+            const flashContainer = document.querySelector('.flash-container');
+            if (flashContainer) {
+                flashContainer.style.transition = "opacity 0.5s ease";
+                flashContainer.style.opacity = "0";
+                setTimeout(() => flashContainer.remove(), 500); // Remove after fade-out
+            }
+        }, 5000); // 5 seconds
+    </script>
+    {% endif %}
+    {% endwith %}
+    <h1>Admin Dashboard</h1>
+
+    <h2>Create New Delivery Assignment</h2>
+    <form method="POST" action="{{ url_for('new_delivery') }}">
+        <label for="address">Delivery Address:</label>
+        <input type="text" id="address" name="address" required>
+        
+        <label for="delivery_time">Delivery Time:</label>
+        <input type="datetime-local" id="delivery_time" name="delivery_time" required>
+        
+        <button type="submit">Assign Delivery</button>
+    </form>
+
+    <h2>Manage Deliveries</h2>
+    <ul>
+        {% for delivery in deliveries %}
+            <li>Delivery to: {{ delivery.address }} at {{ delivery.delivery_time }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

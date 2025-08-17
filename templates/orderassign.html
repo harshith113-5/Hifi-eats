@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assign Orders to Delivery Agents</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #fff5eb;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 25px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 15px rgba(255, 127, 0, 0.1);
+            border-radius: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #ff7f00;
+            font-size: 2.2em;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(to right, #ff7f00, #ffd700);
+            border-radius: 2px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #ffd7b5;
+        }
+
+        th {
+            background-color: #ff7f00;
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background-color: #fff9f2;
+        }
+
+        tr:hover {
+            background-color: #ffe4cc;
+            cursor: pointer;
+        }
+
+        .custom-dropdown {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 2px solid #ffd7b5;
+            margin-top: 15px;
+            border-radius: 8px;
+            background: white;
+            width: 100%;
+            min-width: 800px;
+        }
+
+        .dropdown-row {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            padding: 12px;
+            border-bottom: 1px solid #ffd7b5;
+            cursor: pointer;
+        }
+
+        .dropdown-header {
+            font-weight: bold;
+            background-color: #ff7f00;
+            color: white;
+            position: sticky;
+            top: 0;
+        }
+
+        .dropdown-row:not(.dropdown-header):hover {
+            background-color: #fff0e0;
+            transform: scale(1.01);
+        }
+
+        .selected-agent {
+            margin-top: 25px;
+            padding: 20px;
+            border: 2px solid #ffd7b5;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(255, 127, 0, 0.1);
+        }
+
+        .selected-agent h3 {
+            color: #ff7f00;
+            margin-bottom: 15px;
+        }
+
+        .order-form {
+            margin-top: 30px;
+            display: grid;
+            gap: 15px;
+        }
+
+        label {
+            font-weight: 600;
+            color: #ff7f00;
+        }
+
+        input {
+            padding: 12px;
+            border: 2px solid #ffd7b5;
+            border-radius: 6px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #ff7f00;
+            box-shadow: 0 0 0 3px rgba(255, 127, 0, 0.2);
+        }
+
+        button {
+            background: linear-gradient(135deg, #ff7f00, #ffa500);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.1em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(255, 127, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 127, 0, 0.3);
+            background: linear-gradient(135deg, #ffa500, #ff7f00);
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #fff5eb;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #ff7f00;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ffa500;
+        }
+    </style>
+    <style>
+        /* Style for the list item */
+        li {
+            list-style: none; /* Remove default bullet points */
+            margin: 10px 0; /* Add some margin for spacing */
+        }
+
+        /* Style for the link */
+        li a {
+            text-decoration: none; /* Remove underline */
+            color: #e89911; /* Default text color */
+            font-size: 18px; /* Font size */
+            display: flex; /* Use flexbox to align icon and text */
+            align-items: center; /* Vertically center icon and text */
+            gap: 10px; /* Space between icon and text */
+            padding: 8px 16px; /* Padding for clickable area */
+            border-radius: 4px; /* Rounded corners */
+            transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effects */
+        }
+
+        /* Hover effect for the link */
+        li a:hover {
+            background-color: #ff8800; /* Background color on hover */
+            color: white; /* Text color on hover */
+        }
+
+        /* Style for the Font Awesome icon */
+        li a i {
+            font-size: 20px;
+            color:#ff8800 /* Icon size */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <ul>
+            <li><a href="{{ url_for('admin') }}"><i class="fa-solid fa-house"></i> Home</a></li>
+        </ul>
+        <h1>Orders</h1>
+        <table id="orders-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Order Name</th>
+                    <th>Customer Location</th>
+                    <th>Total Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Orders will be dynamically added here -->
+            </tbody>
+        </table>
+    </div>
+    <div class="container">
+        <h1>Assign Orders to Delivery Agents</h1>
+        <div class="data-container">
+            <h3>Select a Delivery Agent</h3>
+            <div class="custom-dropdown" id="agentDropdown">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Agent ID</th>
+                            <th>Agent Name</th>
+                            <th>Location</th>
+                            <th>Orders Delivered</th>
+                            <th>On Time Deliveries</th>
+                            <th>Customer Ratings</th>
+                            <th>Cancellation Rate</th>
+                        </tr>
+                    </thead>
+                    <tbody id="agentDropdownBody">
+                        <!-- Agents will be dynamically added here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="selected-agent" id="selectedAgentDetails" style="display: none;">
+            <h3>Selected Agent Details</h3>
+            <p><strong>ID:</strong> <span id="agentId"></span></p>
+            <p><strong>Name:</strong> <span id="agentName"></span></p>
+            <p><strong>Location:</strong> <span id="agentLocation"></span></p>
+            <p><strong>Orders Delivered:</strong> <span id="agentOrdersDelivered"></span></p>
+            <p><strong>On Time Deliveries:</strong> <span id="agentOnTimeDeliveries"></span></p>
+            <p><strong>Customer Ratings:</strong> <span id="agentCustomerRatings"></span></p>
+            <p><strong>Cancellation Rate:</strong> <span id="agentCancellationRate"></span></p>
+        </div>
+
+        <div class="order-form">
+            <label for="orderId">Order ID:</label>
+            <input type="number" id="orderId" required>
+
+            <label for="scheduledDeliveryTime">Scheduled Delivery Time:</label>
+            <input type="datetime-local" id="scheduledDeliveryTime" required>
+
+            <input type="hidden" id="selectedAgentId">
+            <button onclick="assignOrder()">Assign Order</button>
+        </div>
+    </div>
+
+    <script>
+        let agents = [];
+        let selectedOrderLocation = '';
+
+        window.onload = function () {
+            fetch('/get_agents')
+                .then(response => response.json())
+                .then(data => {
+                    agents = data.agents;
+                });
+
+            fetch('/get_orders')
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.querySelector('#orders-table tbody');
+                    tableBody.innerHTML = '';
+
+                    data.forEach(order => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${order.id}</td>
+                            <td>${order.items}</td>
+                            <td>${order.location}</td>
+                            <td>${order.total_price}</td>
+                        `;
+                        row.addEventListener('click', () => {
+                            selectedOrderLocation = order.location;
+                            document.getElementById('orderId').value = order.id;
+                            filterAgentsByLocation(order.location);
+                        });
+                        tableBody.appendChild(row);
+                    });
+                });
+        };
+
+        function filterAgentsByLocation(location) {
+            const dropdownBody = document.getElementById('agentDropdownBody');
+            dropdownBody.innerHTML = '';
+
+            let matchingAgents = agents.filter(agent => agent.location === location);
+
+            if (matchingAgents.length === 0) {
+                matchingAgents = agents;
+            }
+
+            matchingAgents.forEach(agent => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${agent.id}</td>
+                    <td>${agent.username}</td>
+                    <td>${agent.location}</td>
+                    <td>${agent.orders_delivered}</td>
+                    <td>${agent.on_time_deliveries}</td>
+                    <td>${agent.customer_ratings}</td>
+                    <td>${agent.cancellation_rate}</td>
+                `;
+                row.addEventListener('click', () => {
+                    document.getElementById('agentId').innerText = agent.id;
+                    document.getElementById('agentName').innerText = agent.username;
+                    document.getElementById('agentLocation').innerText = agent.location;
+                    document.getElementById('agentOrdersDelivered').innerText = agent.orders_delivered;
+                    document.getElementById('agentOnTimeDeliveries').innerText = agent.on_time_deliveries;
+                    document.getElementById('agentCustomerRatings').innerText = agent.customer_ratings;
+                    document.getElementById('agentCancellationRate').innerText = agent.cancellation_rate;
+                    document.getElementById('selectedAgentDetails').style.display = 'block';
+                    document.getElementById('selectedAgentId').value = agent.id;
+                });
+                dropdownBody.appendChild(row);
+            });
+        }
+
+        function assignOrder() {
+            const orderId = document.getElementById('orderId').value;
+            const agentId = document.getElementById('selectedAgentId').value;
+            const scheduledTime = document.getElementById('scheduledDeliveryTime').value;
+            if (!orderId || !agentId || !scheduledTime) {
+                alert('Please fill in all the fields.');
+                return;
+            }
+            const payload = {
+                orderId: orderId, // ID of the order
+                deliveryAgentId: agentId, // Correct key
+                scheduledDeliveryTime: scheduledTime // Correct key
+                };
+                fetch('/assign_order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert('Order assigned successfully!');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to assign order.');
+                });}
+    </script>
+</body>
+</html>

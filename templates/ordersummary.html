@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Order View</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f8f8; /* Light background */
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            color: #ff8c42;
+            margin-top: 30px;
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+        ul {
+            margin: 20px;
+            padding-left: 0;
+        }
+        li {
+            list-style: none;
+            margin: 10px 0;
+            font-size: 18px;
+        }
+        li a {
+            text-decoration: none;
+            color: #e89911;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        li a:hover {
+            background-color: #ff8800;
+            color: white;
+        }
+        li a i {
+            font-size: 22px;
+        }
+        .orders-container {
+            padding: 30px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .order-details {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #ffebcc;
+            border-left: 5px solid #ff8c42;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+        }
+        .order-details:hover {
+            transform: translateY(-5px); /* Slight hover effect */
+        }
+        .order-details h3 {
+            color: #ff8c42;
+            font-size: 1.6em;
+            margin-bottom: 15px;
+        }
+        .order-details p {
+            font-size: 1.1em;
+            margin: 10px 0;
+            color: #333;
+        }
+        .no-orders {
+            text-align: center;
+            color: #ff4500;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Order Summary</h1>
+    <ul>
+        <li><a href="{{ url_for('start') }}"><i class="fa-solid fa-home"></i> Home</a></li>
+    </ul>
+
+    {% if orders %}
+    <div class="orders-container">
+        {% for order in orders %}
+            <div class="order-details">
+                <h3>Order ID: {{ order.id }}</h3>
+                <p><strong>Customer Name:</strong> {{ order.customerName }}</p>
+                <p><strong>Items Ordered:</strong> {{ order["items"] }}</p>
+                <p><strong>Total Price:</strong> ₹{{ order.total_price }}</p>
+                <hr>
+            </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        <p class="no-orders">No orders found.</p>
+    {% endif %}
+</body>
+</html>

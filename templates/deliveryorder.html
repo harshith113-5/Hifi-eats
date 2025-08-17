@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.min.js"></script>
+    <script type="text/javascript">
+        var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+
+        // Listen for new delivery notifications from the server
+        socket.on('new_delivery_notification', function(data) {
+            alert(data.message);  // Display the notification (You can customize this with a modal or a notification box)
+        });
+    </script>
+</head>
+<body>
+    <h1>Welcome, {{ session['username'] }} - Agent Dashboard</h1>
+    <p>Waiting for new delivery assignments...</p>
+
+    <h2>Current Deliveries</h2>
+    <ul>
+        {% for delivery in deliveries %}
+            <li>
+                <p>Address: {{ delivery.address }}</p>
+                <p>Delivery Time: {{ delivery.delivery_time }}</p>
+                <button onclick="acceptDelivery({{ delivery.id }})">Accept</button>
+                <button onclick="rejectDelivery({{ delivery.id }})">Reject</button>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

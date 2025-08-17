@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - HIFI DELIVERY</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* styles.css */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f8f9fa;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    font-size: 1rem;
+}
+
+header {
+    background: #ff5722;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+header .logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+header .nav-container {
+    margin-top: 10px;  /* Space above the navigation menu */
+    padding: 10px;
+}
+
+header nav ul {
+    list-style: none;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+header nav ul li a {
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+header nav ul li a i {
+    margin-right: 5px;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    padding: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.sidebar {
+    width: 100%;
+    background: #abb8b1;
+    color: rgb(208, 194, 194);
+    padding: 15px;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin: 10px 0;
+}
+
+.sidebar ul li a {
+    color: rgb(14, 7, 7);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar ul li a i {
+    margin-right: 5px;
+}
+
+main {
+    flex-grow: 1;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+h2, h3 {
+    color: #ff5722;
+    margin-bottom: 10px;
+}
+
+.stats {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    flex: 1 1 200px;
+}
+
+.manage-users table,
+.manage-orders table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.manage-users table th,
+.manage-orders table th,
+.manage-users table td,
+.manage-orders table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.manage-users table th,
+.manage-orders table th {
+    background: #f0f0f0;
+}
+
+.manage-users table td a,
+.manage-orders table td a {
+    color: #ff5722;
+    text-decoration: none;
+}
+
+.manage-users table td a:hover,
+.manage-orders table td a:hover {
+    color: #e64a19;
+}
+
+footer {
+    background: #333;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    margin-top: auto;  /* Push footer to the bottom */
+}
+
+footer p {
+    margin: 0;
+}
+
+/* Media Query for responsive design */
+@media (max-width: 768px) {
+    .sidebar {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    header nav ul {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .stat-card {
+        flex: 1 1 100%;
+    }
+
+    .manage-users table,
+    .manage-orders table {
+        font-size: 0.9rem;
+    }
+
+    .content {
+        padding: 10px;
+    }
+}
+.flash-container {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+
+        .flash-message {
+            background-color: #f44336;
+            /* Red background for error */
+            color: white;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .flash-message.success {
+            background-color: #4CAF50;
+            /* Green background for success */
+        }
+
+        .flash-message.danger {
+            background-color: #f44336;
+            /* Red background for error */
+        }
+
+        .flash-message p {
+            margin: 0;
+        }
+
+        /* Hide the flash message after 3 seconds */
+        .flash-message {
+            display: block;
+            animation: fadeInOut 3s forwards;
+        }
+
+    </style>
+</head>
+<body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-container">
+        {% for category, message in messages %}
+        <div class="flash-message {{ category }}">
+            <p>{{ message }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    <script>
+        // Automatically hide flash messages after 5 seconds
+        setTimeout(function() {
+            const flashContainer = document.querySelector('.flash-container');
+            if (flashContainer) {
+                flashContainer.style.transition = "opacity 0.5s ease";
+                flashContainer.style.opacity = "0";
+                setTimeout(() => flashContainer.remove(), 500); // Remove after fade-out
+            }
+        }, 5000); // 5 seconds
+    </script>
+    {% endif %}
+    {% endwith %}
+    <header>
+        <div class="logo">HIFI DELIVERY ADMIN</div>
+        <div class="nav-container">
+            <nav>
+                <ul>
+                    <li><a href="manageuser"><i class="fa-solid fa-users"></i> Manage Users</a></li>
+                    <li><a href="agent_issues"><i class="fa-solid fa-file-alt"></i> View Reports</a></li>
+                    <li><a href="view_ratings"><i class="fa-solid fa-star"></i> View Ratings</a></li>
+                    <li><a href="{{ url_for('track_delivery') }}"><i class="fas fa-truck"></i>Track Delivery</a></li>
+                    <li><a href="{{ url_for('menu_management') }}"><i class="fa-solid fa-utensils"></i> Menu Management</a></li>
+                    <li><a href="{{ url_for('manage_orders') }}"><i class="fa-solid fa-box"></i> Manage Orders</a></li>
+                    <li><a href="{{ url_for('items_analysis_admin') }}"><i class="fa-solid fa-chart-bar"></i> Items Analysis</a></li>
+                    <li><a href="{{ url_for('sales_trends') }}"><i class="fa-solid fa-chart-line"></i> Sales Trends</a></li>
+                    <li><a href="{{ url_for('customer_demographics') }}"><i class="fa-solid fa-id-card-alt"></i> Customer Demographics</a></li>
+                    <li><a href="{{ url_for('delivery_kpi') }}"><i class="fa-solid fa-bars-progress"></i>Delivery Analytics</a></li>
+                    <li><a href="{{ url_for('logout') }}"><i class="fa-solid fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+
+     <div class="content">
+        <!--<aside class="sidebar">
+            <ul>
+                <li><a href="admin_dashboard.html"><i class="fa-solid fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="manageuser"><i class="fa-solid fa-users"></i> Manage Users</a></li>
+                <li><a href="agent_issues"><i class="fa-solid fa-file-alt"></i> View Reports</a></li>
+                <li><a href="manage_orders.html"><i class="fa-solid fa-box"></i> Manage Orders</a></li>
+            </ul>
+        </aside>-->
+
+        <main>
+            <h2>Admin Dashboard</h2>
+            <section class="stats">
+                <div class="stat-card">
+                    <h3>Total Users</h3>
+                    <p>{{ total_users }}</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Orders</h3>
+                    <p>{{ total_orders }}</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Revenue</h3>
+                    <p>₹{{ total_revenue }}</p>
+                </div>
+            </section>
+            
+            
+
+    <footer>
+        <p>&copy; 2024 HIFI DELIVERY. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>

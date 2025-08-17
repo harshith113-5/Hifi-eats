@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Food Delivery App</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background: #ff5722;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        header nav ul {
+            list-style: none;
+            display: flex;
+        }
+
+        header nav ul li {
+            margin: 0 10px;
+        }
+
+        header nav ul li a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        header nav ul li a i {
+            margin-right: 5px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            color: #ff5722;
+            margin-bottom: 20px;
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        .features {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+
+        .features div {
+            flex: 1;
+            max-width: 300px;
+            margin: 10px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .features div i {
+            font-size: 2rem;
+            color: #ff5722;
+            margin-bottom: 10px;
+        }
+
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            margin-top: 20px;
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            header nav ul {
+                flex-direction: column;
+                align-items: flex-end;
+            }
+
+            .features {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">HIFI DELIVERY</div>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('start') }}"><i class="fa-solid fa-home"></i> Home</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1>About Us</h1>
+        <p>Welcome to HIFI DELIVERY, your ultimate solution for seamless food delivery. Our mission is to connect food lovers with the best restaurants in town, offering a fast, reliable, and enjoyable dining experience right at your doorstep.</p>
+        
+        <h2>Our Features</h2>
+        <div class="features">
+            <div>
+                <i class="fa-solid fa-truck-fast"></i>
+                <h3>Fast Delivery</h3>
+                <p>Our team ensures that your food reaches you in the shortest time possible.</p>
+            </div>
+            <div>
+                <i class="fa-solid fa-utensils"></i>
+                <h3>Wide Variety</h3>
+                <p>Choose from a vast selection of cuisines and top-rated restaurants.</p>
+            </div>
+            <div>
+                <i class="fa-solid fa-percent"></i>
+                <h3>Exclusive Discounts</h3>
+                <p>Enjoy amazing discounts and offers every day.</p>
+            </div>
+        </div>
+
+        <h2>FAQs</h2>
+        <p><strong>Q: How do I place an order?</strong></p>
+        <p>A: Simply browse our menu, add your favorite dishes to the cart, and proceed to checkout.</p>
+        
+        <p><strong>Q: What areas do you deliver to?</strong></p>
+        <p>A: We currently deliver to all major cities and are expanding to serve more locations.</p>
+        
+        <p><strong>Q: Can I track my order?</strong></p>
+        <p>A: Yes, you can track your order in real-time from the app or website.</p>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 HIFI DELIVERY. All Rights Reserved.</p>
+    </footer>
+
+</body>
+</html>

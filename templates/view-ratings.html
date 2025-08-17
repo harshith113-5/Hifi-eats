@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Feedback</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        main {
+            flex: 1; /* Ensures the main content takes up available space */
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        header {
+            background: #ff5722;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        header .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        header nav ul {
+            list-style: none;
+            display: flex;
+            gap: 15px;
+        }
+
+        header nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: rgb(243, 126, 53);
+            color: #fff;
+            text-transform: uppercase;
+        }
+
+        td {
+            background-color: #f9f9f9;
+        }
+
+        tr:nth-child(even) td {
+            background-color: #ecf0f1;
+        }
+
+        tr:hover td {
+            background-color: rgb(249, 196, 171);
+        }
+
+        h1 {
+            font-family: 'Arial', sans-serif;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 20px;
+        }
+        .star-filled {
+            color:#FFB600;
+        }
+        
+        .star-empty {
+            color: #ccc; /* Light gray color for empty stars */
+        }
+        
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">Order Feedback</div>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('admin')}}"><i class="fa-solid fa-house"></i> Home</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section>
+            <h1>Review Details</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Order ID</th>
+                        <th>Customer ID</th>
+                        <th>Rating</th>
+                        <th>Review</th>
+                        <th>Feedback Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for feedback in feedback_data %}
+                    <tr>
+                        <td>{{ feedback[0] }}</td> <!-- ID -->
+                        <td>{{ feedback[1] }}</td> <!-- Order ID -->
+                        <td>{{ feedback[2] }}</td> <!-- Customer ID -->
+                        <td>
+                            <!-- Display rating as stars -->
+                            {% for i in range(feedback[3]) %}
+                                <i class="fa-solid fa-star star-filled"></i>
+                            {% endfor %}
+                            {% for i in range(feedback[3], 5) %}
+                                <i class="fa-regular fa-star star-empty"></i>
+                            {% endfor %}
+                        </td> <!-- Rating -->
+                        
+                        <td>{{ feedback[4] }}</td> <!-- Review -->
+                       
+                        <td>{{ feedback[5] }}</td> <!-- Feedback Date -->
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Order Feedback. All Rights Reserved.</p>
+    </footer>
+
+</body>
+</html>

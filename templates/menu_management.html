@@ -1,0 +1,137 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Management</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylesss.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Style for the list item */
+        li {
+            list-style: none; /* Remove default bullet points */
+            margin: 10px 0; /* Add some margin for spacing */
+        }
+
+        /* Style for the link */
+        li a {
+            text-decoration: none; /* Remove underline */
+            color: #e89911; /* Default text color */
+            font-size: 18px; /* Font size */
+            display: flex; /* Use flexbox to align icon and text */
+            align-items: center; /* Vertically center icon and text */
+            gap: 10px; /* Space between icon and text */
+            padding: 8px 16px; /* Padding for clickable area */
+            border-radius: 4px; /* Rounded corners */
+            transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effects */
+        }
+
+        /* Hover effect for the link */
+        li a:hover {
+            background-color: #ff8800; /* Background color on hover */
+            color: white; /* Text color on hover */
+        }
+
+        /* Style for the Font Awesome icon */
+        li a i {
+            font-size: 20px;
+            color:#ff8800 /* Icon size */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        
+        <div class="header">
+            <h1>Menu Management</h1>
+            <ul>
+                <li><a href="{{ url_for('admin') }}"><i class="fa-solid fa-house"></i> Home</a></li>
+            </ul>
+        </div>
+        <div class="content-wrapper">
+            <div class="form-section">
+                <h2>{% if item %}Edit Menu Item{% else %}Add Menu Item{% endif %}</h2>
+                <form method="POST" action="{% if item %}{{ url_for('edit_item', item_id=item[0]) }}{% else %}{{ url_for('add_item') }}{% endif %}" enctype="multipart/form-data" class="menu-form">
+                    <div class="form-group">
+                        <input type="text" name="name" placeholder="Item Name" value="{{ item[1] if item else '' }}" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea name="description" placeholder="Description" required>{{ item[2] if item else '' }}</textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="number" step="0.01" name="price" placeholder="Price" value="{{ item[3] if item else '' }}" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="number" name="discount" placeholder="Discount (%)" value="{{ item[7] if item else '' }}" min="0" max="100">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Category:</label>
+                        <select name="category" id="category" required>
+                            <option value="veg" {% if item and item[5] == 'veg' %}selected{% endif %}>Veg</option>
+                            <option value="non-veg" {% if item and item[5] == 'non-veg' %}selected{% endif %}>Non-Veg</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="subcategory">Subcategory:</label>
+                        <select name="subcategory" id="subcategory" required>
+                            <option value="starter" {% if item and item[6] == 'starter' %}selected{% endif %}>Starter</option>
+                            <option value="biryani" {% if item and item[6] == 'biryani' %}selected{% endif %}>Biryani</option>
+                            <option value="dessert" {% if item and item[6] == 'dessert' %}selected{% endif %}>Dessert</option>
+                            <option value="beverages" {% if item and item[6] == 'beverages' %}selected{% endif %}>Beverages</option>
+
+                            <option value="curries" {% if item and item[6] == 'curries' %}selected{% endif %}>Curries</option>
+                            <option value="icecreams" {% if item and item[6] == 'icecreams' %}selected{% endif %}>Icecreams</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="image">Upload Image:</label>
+                        <input type="file" name="image" id="image" accept="image/*" {% if item %}required{% endif %} class="file-input">
+                    </div>
+                    <div class="form-group">
+                        <button type="submit">{% if item %}Update Item{% else %}Add Item{% endif %}</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="table-section">
+                <h2>Menu Items</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Price</th>
+                                <th>Category</th>
+                                <th>Subcategory</th>
+                                <th>Discount</th>
+                                <th>Image</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in items %}
+                            <tr>
+                                <td>{{ item[1] }}</td>
+                                <td>{{ item[2] }}</td>
+                                <td>₹{{ item[3] }}</td>
+                                <td><span class="badge {{ item[5] }}">{{ item[5] }}</span></td>
+                                <td>{{ item[6] }}</td>
+                                <td>{{ item[7] }}%</td>
+                                <td><img src="{{ item[4] }}" width="50" alt="{{ item[1] }}" class="menu-image"></td>
+                                <td class="actions">
+                                    <a href="{{ url_for('edit_item', item_id=item[0]) }}" class="btn-edit">Edit</a>
+                                    <a href="{{ url_for('delete_item', item_id=item[0]) }}" onclick="return confirm('Are you sure?')" class="btn-delete">Delete</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

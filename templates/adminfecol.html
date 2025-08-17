@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Feedback Analysis</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+            color: #333;
+        }
+
+        /* Header */
+        .header {
+            background-color: #fc8019;
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        /* Filters Section */
+        .filters {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem auto;
+            display: flex;
+            justify-content: space-around;
+            max-width: 1200px;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .filters input,
+        .filters select,
+        .filters button {
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .filters button {
+            background-color: #fc8019;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* Card Section */
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            text-align: center;
+            flex: 1 1 calc(33% - 2rem);
+            min-width: 250px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Chart Section */
+        .chart-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        canvas {
+            max-width: 100%;
+            height: auto;
+            margin: 1rem auto;
+        }
+
+        @media (max-width: 768px) {
+            .card {
+                flex: 1 1 100%;
+            }
+
+            .filters {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1>Customer Feedback Analysis</h1>
+    </div>
+
+    <!-- Filters Section -->
+    <div class="filters">
+        <input type="date" id="start-date" placeholder="Start Date">
+        <input type="date" id="end-date" placeholder="End Date">
+        <select id="feedback-category">
+            <option value="">All Categories</option>
+            <option value="delivery">Delivery</option>
+            <option value="food">Food</option>
+            <option value="support">Support</option>
+        </select>
+        <button>Apply Filters</button>
+    </div>
+
+    <!-- KPI Cards Section -->
+    <div class="container">
+        <div class="card">
+            <h3>Total Feedback</h3>
+            <p>1200</p>
+        </div>
+        <div class="card">
+            <h3>Positive Feedback</h3>
+            <p>900</p>
+        </div>
+        <div class="card">
+            <h3>Negative Feedback</h3>
+            <p>300</p>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="chart-container">
+        <h3>Feedback Trend Over Time</h3>
+        <canvas id="feedbackTrendChart"></canvas>
+    </div>
+
+    <div class="chart-container">
+        <h3>Sentiment Analysis</h3>
+        <canvas id="sentimentChart"></canvas>
+    </div>
+
+    <div class="chart-container">
+        <h3>Feedback Categories Breakdown</h3>
+        <canvas id="categoryBarChart"></canvas>
+    </div>
+
+    <div class="chart-container">
+        <h3>Monthly Feedback by Sentiment</h3>
+        <canvas id="feedbackStackedChart"></canvas>
+    </div>
+
+    <script>
+        // Feedback Trend Chart (Line Chart)
+        const feedbackTrendCtx = document.getElementById('feedbackTrendChart').getContext('2d');
+        new Chart(feedbackTrendCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Total Feedback',
+                    data: [100, 150, 200, 250, 300, 350],
+                    borderColor: '#fc8019',
+                    backgroundColor: 'rgba(252, 128, 25, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Sentiment Analysis (Doughnut Chart)
+        const sentimentCtx = document.getElementById('sentimentChart').getContext('2d');
+        new Chart(sentimentCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Positive', 'Negative'],
+                datasets: [{
+                    data: [75, 25],
+                    backgroundColor: ['#28a745', '#dc3545']
+                }]
+            },
+            options: {
+                responsive: true,
+            }
+        });
+
+        // Feedback Categories Breakdown (Bar Chart)
+        const categoryBarCtx = document.getElementById('categoryBarChart').getContext('2d');
+        new Chart(categoryBarCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Delivery', 'Food', 'Support'],
+                datasets: [{
+                    label: 'Feedback Count',
+                    data: [400, 500, 300],
+                    backgroundColor: ['#fc8019', '#fcd919', '#19b3fc']
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Monthly Feedback by Sentiment (Stacked Bar Chart)
+        const feedbackStackedCtx = document.getElementById('feedbackStackedChart').getContext('2d');
+        new Chart(feedbackStackedCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [
+                    {
+                        label: 'Positive Feedback',
+                        data: [60, 80, 90, 110, 130, 150],
+                        backgroundColor: '#28a745',
+                    },
+                    {
+                        label: 'Negative Feedback',
+                        data: [40, 70, 110, 140, 170, 200],
+                        backgroundColor: '#dc3545',
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false
+                    }
+                },
+                scales: {
+                    x: {
+                        stacked: true
+                    },
+                    y: {
+                        stacked: true
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Delivery App - User Sections</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+   <style>
+    /* styles.css */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f8f9fa;
+    color: #333;
+    line-height: 1.6;
+}
+
+header {
+    background: #ff5722;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header .logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+header nav ul {
+    list-style: none;
+    display: flex;
+}
+
+header nav ul li {
+    margin: 0 10px;
+}
+
+header nav ul li a {
+    color: white;
+    text-decoration: none;
+}
+
+.marquee {
+    background: #ffccbc;
+    color: #333;
+    padding: 10px;
+    font-size: 1.2rem;
+}
+
+.hero {
+    background: url('https://png.pngtree.com/thumb_back/fh260/background/20230705/pngtree-3d-rendering-of-a-food-delivery-application-image_3792447.jpg') no-repeat center center/cover;
+    height: 70vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgb(246, 241, 241);
+    text-align: center;
+}
+
+.hero h1 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+}
+
+.hero p {
+    font-size: 1.2rem;
+}
+
+.hero button {
+    background: #ff5722;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 15px;
+}
+
+.hero button:hover {
+    background: #e64a19;
+}
+
+.food-items {
+    padding: 20px;
+    background: #f8f9fa;
+    text-align: center;
+}
+
+.food-items h2 {
+    color: #ff5722;
+    margin-bottom: 20px;
+}
+
+.food-gallery {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.food-category {
+    flex: 1;
+    max-width: 250px;
+    text-align: center;
+    position: relative; /* Added to enable z-index and hover effects */
+    overflow: hidden;
+}
+
+.food-category img {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    transition: transform 0.3s ease, opacity 0.3s ease; /* Smooth transition */
+    cursor: pointer;
+}
+
+.food-category:hover img {
+    transform: scale(1.1); /* Scale up image */
+    opacity: 0.8; /* Slightly transparent */
+}
+
+.user-section {
+    display: flex; /* Use flexbox for side-by-side layout */
+    justify-content: space-around; /* Evenly space the sections */
+    padding: 20px;
+    text-align: center;
+    background: #ffffff;
+    cursor: pointer;
+}
+
+.admin-section, .customer-section, .delivery-agent-section {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+    flex: 1; /* Take equal share of the space */
+}
+
+.admin-section h3, .customer-section h3, .delivery-agent-section h3 {
+    color: #ff5722;
+    margin-bottom: 10px;
+}
+
+.admin-section p, .customer-section p, .delivery-agent-section p {
+    color: #333;
+    font-size: 1rem;
+    margin-bottom: 15px;
+}
+
+.admin-section a, .customer-section a, .delivery-agent-section a {
+    display: inline-block;
+    background: #ff5722;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+.admin-section a:hover, .customer-section a:hover, .delivery-agent-section a:hover {
+    background: #e64a19;
+}
+
+.features {
+    background: #fff;
+    padding: 30px;
+    text-align: center;
+}
+
+.features h2 {
+    color: #ff5722;
+    margin-bottom: 20px;
+}
+
+.feature {
+    display: flex;
+    justify-content: space-around;
+    gap: 20px;
+}
+
+.feature div {
+    flex: 1;
+    max-width: 250px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 15px;
+}
+
+.feature img {
+    width: 100%;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    transition: transform 0.3s ease;
+}
+
+.feature img:hover {
+    transform: scale(1.1); /* Scale up image */
+}
+
+footer {
+    background: #ff5722;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+footer p {
+    margin: 0;
+}
+
+.marquee {
+    background: #ffccbc;
+    color: #333;
+    padding: 10px;
+    font-size: 1.2rem;
+}
+
+.marquee p {
+    margin: 0;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+@media (max-width: 768px) {
+    .food-gallery {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .food-category {
+        margin: 10px 0;
+        width: 100%; /* Make the food items full width */
+    }
+
+    .hero {
+        padding: 20px;
+    }
+
+    .features {
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    .user-section {
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    .user-section div {
+        margin-bottom: 20px;
+        width: 100%; /* Ensure each section is full width */
+        text-align: center; /* Center-align text for better readability */
+    }
+
+    .user-section img {
+        width: 100%; /* Adjust image width to full width */
+        height: auto; /* Adjust image height proportionally */
+    }
+    
+    .food-category img {
+        width: 100%; /* Adjust image width to full width */
+        height: auto; /* Adjust image height proportionally */
+    }
+
+    .features div {
+        margin: 10px 0; /* Reduce spacing between features */
+        width: 100%; /* Ensure feature sections are full width */
+    }
+
+    .feature img {
+        width: 100%; /* Adjust image width to full width */
+        height: auto; /* Adjust image height proportionally */
+    }
+}
+
+@media (max-width: 768px) {
+    header nav ul {
+        flex-direction: column;
+        align-items: flex-end;
+    }
+
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+
+    .features .feature {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+.food-items {
+    padding: 20px;
+    background: #f8f9fa;
+    text-align: center;
+}
+
+.food-items h2 {
+    color: #ff5722;
+    margin-bottom: 20px;
+}
+
+.food-gallery {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.food-category {
+    flex: 1;
+    max-width: 250px;
+    text-align: center;
+    position: relative; /* Added to enable z-index and hover effects */
+    overflow: hidden;
+}
+
+.food-category img {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    transition: transform 0.3s ease, opacity 0.3s ease; /* Smooth transition */
+    cursor: pointer;
+}
+
+.food-category:hover img {
+    transform: scale(1.1); /* Scale up image */
+    opacity: 0.8; /* Slightly transparent */
+}
+
+@media (max-width: 768px) {
+    .food-gallery {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+.flash-container {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+
+        .flash-message {
+            background-color: #f44336;
+            /* Red background for error */
+            color: white;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .flash-message.success {
+            background-color: #4CAF50;
+            /* Green background for success */
+        }
+
+        .flash-message.danger {
+            background-color: #f44336;
+            /* Red background for error */
+        }
+
+        .flash-message p {
+            margin: 0;
+        }
+
+        /* Hide the flash message after 3 seconds */
+        .flash-message {
+            display: block;
+            animation: fadeInOut 3s forwards;
+        }
+
+
+   </style>
+</head>
+<body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-container">
+        {% for category, message in messages %}
+        <div class="flash-message {{ category }}">
+            <p>{{ message }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    <script>
+        // Automatically hide flash messages after 5 seconds
+        setTimeout(function() {
+            const flashContainer = document.querySelector('.flash-container');
+            if (flashContainer) {
+                flashContainer.style.transition = "opacity 0.5s ease";
+                flashContainer.style.opacity = "0";
+                setTimeout(() => flashContainer.remove(), 500); // Remove after fade-out
+            }
+        }, 5000); // 5 seconds
+    </script>
+    {% endif %}
+    {% endwith %}
+    <header>
+        <div class="logo">HIFI DELIVERY</div>
+        <nav>
+            <ul> 
+                <li><a href="{{ url_for('info') }}"><i class="fa-solid fa-circle-info"></i> Info</a></li>
+                <li><a href="{{ url_for('ordersummary') }}"><i class="fa-solid fa-file-invoice"></i> Order History</a></li>
+                <li><a href="{{ url_for('contact') }}"><i class="fa-solid fa-user-astronaut"></i> Contact</a></li>
+                <li><a href="{{ url_for('customer_rating') }}"><i class="fa-solid fa-star"></i> Rate your orders</a></li>
+                <li><a href="{{ url_for('viewprofile') }}"><i class="fa-solid fa-user"></i> Profile</a></li>
+                
+            </ul>
+        </nav>
+    </header>
+    <marquee behavior="scroll" direction="left" scrollamount="6" style="background: #ffccbc; color: #333; padding: 10px; font-size: 1.2rem;">
+        Welcome to HIFI DELIVERY! Enjoy fast delivery, amazing discounts, and your favorite meals from our top restaurant.
+    </marquee>
+
+    <div class="hero">
+        <div>
+            <h1>Delicious Food Delivered to You</h1>
+            <p>Order your favorite meals from top restaurants with just a few clicks.</p>
+            <button onclick="callMenuApi()">Order Now</button>
+        </div>
+    </div>
+    <section class="food-items">
+        <h2>Our Food Categories</h2>
+        <div class="food-gallery">
+            <div class="food-category">
+               <a href=""> <img src="https://images.creativemarket.com/0.1.0/ps/2505707/1160/772/m1/fpnw/wm0/veggie-cm-white-.jpg?1491433429&s=b5627ff5374a23409579b3b3685db760" alt="Veg Food" height="300px" width="300px">
+                <h3>Veg</h3></a>
+            </div>
+            <div class="food-category">
+                <a href=""><img src="https://png.pngtree.com/png-clipart/20190516/original/pngtree-non-veg-food-with-vegitables-foods-dish-png-image_3687005.jpg"alt="Non-Veg Food" height="300px" width="300px">
+                <h3>Non-Veg</h3></a>
+            </div>
+            <div class="food-category">
+                <a href=""><img src="https://tse3.mm.bing.net/th?id=OIP.Ypj4ndIHMdPCH0K8PPzvmgHaGW&pid=Api&P=0&h=220" alt="Organic Food" height="300px" width="300px">
+                <h3>Pure Organic</h3></a>
+            </div>
+        </div>
+    </section>
+    <!-- <div class="user-section">
+        <div class="admin-section">
+            <h3>Admin</h3>
+            <img src="https://vectorified.com/images/admin-logo-icon-18.png" width="170px",height="200px">
+            <p>Manage users, view reports, and monitor orders.</p>
+            <a href="{{ url_for('admin') }}">Go to Admin Dashboard</a>
+        </div>
+        <div class="customer-section">
+            <h3>Customer</h3>
+            <img src="https://tse3.mm.bing.net/th?id=OIP.X4FgoiGiLltkKj1LJutULAHaH6&pid=Api&P=0&h=220" width="170px",height="200px">
+            <p>View and order food, track orders, and manage account.</p>
+            <a href="{{ url_for('start') }}">Go to Customer Dashboard</a>
+        </div>
+        <div class="delivery-agent-section">
+            <h3>Delivery Agent</h3>
+            <img src="https://www.vhv.rs/dpng/d/433-4330684_our-delivery-service-home-delivery-logo-png-transparent.png" width="170px",height="200px">
+            <p>View delivery tasks, manage orders, and track deliveries.</p>
+            <a href="{{ url_for('delivery') }}">Go to Delivery Agent Dashboard</a>
+        </div> -->
+    </div>
+
+    <section class="features">
+        <h2>Why Choose Us?</h2>
+        <div class="feature">
+            <div>
+                <img src="https://tse4.mm.bing.net/th?id=OIP.c6W_jQfTZJJyi0OIgfNvvQHaEW&pid=Api&P=0&h=220" alt="Fast Delivery">
+                <h3>Fast Delivery</h3>
+                <p>Get your meals delivered in under 30 minutes.</p>
+            </div>
+            <div>
+                <img src="https://mir-s3-cdn-cf.behance.net/project_modules/fs/1e8feb109720503.5fda2a433c12d.jpg" alt="Top Restaurants">
+                <h3>Top Restaurant</h3>
+                <p>Based on the demand we have choosen the restaurant</p>
+            </div>
+            <div>
+                <img src="https://tse1.mm.bing.net/th?id=OIP.nLRTebQKWXzyuSgTfCW6hQHaEK&pid=Api&P=0&h=220" alt="Great Discounts">
+                <h3>Great Discounts</h3>
+                <p>Enjoy amazing deals and discounts every day.</p>
+            </div>
+        </div>
+    </section>
+    <marquee><p><b>To get Detailed Information click info</b></p></marquee>
+
+    <footer>
+        <p>&copy; 2024 HIFI DELIVERY. All Rights Reserved.</p>
+    </footer>
+    <script>
+        function callMenuApi() {
+            fetch('/menu')
+                .then(response => {
+                    if (response.ok) {
+                        // Redirect to the /menu page if necessary
+                        window.location.href = '/menu'; 
+                    } else {
+                        console.error('Failed to call the /menu API');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+        </script>
+</body>
+</html>

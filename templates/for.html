@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forgot Password</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background:  url("{{url_for('static',filename='img.jpg')}}") no-repeat center center fixed;
+            background-size: cover; /* Make the background image responsive */
+            background-position: center;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 300px;
+            text-align: center;
+            margin-left: auto; /* Push the container to the right */
+            margin-right: 20px; /* Add some space from the edge */
+        }
+        h2 {
+            color: #333;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #fc8019;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #fc8019;
+        }
+        a {
+            text-decoration: none;
+            color: #fc8019;
+            margin-top: 10px;
+            display: inline-block;
+        }
+        a:hover {
+            color: #fc8019;
+        }
+        .flash-container {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+
+        .flash-message {
+            background-color: #f44336;
+            /* Red background for error */
+            color: white;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .flash-message.success {
+            background-color: #4CAF50;
+            /* Green background for success */
+        }
+
+        .flash-message.danger {
+            background-color: #f44336;
+            /* Red background for error */
+        }
+
+        .flash-message p {
+            margin: 0;
+        }
+
+        /* Hide the flash message after 3 seconds */
+        .flash-message {
+            display: block;
+            animation: fadeInOut 3s forwards;
+        }
+    </style>
+    
+    
+</head>
+<body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-container">
+        {% for category, message in messages %}
+        <div class="flash-message {{ category }}">
+            <p>{{ message }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    <script>
+        // Automatically hide flash messages after 5 seconds
+        setTimeout(function() {
+            const flashContainer = document.querySelector('.flash-container');
+            if (flashContainer) {
+                flashContainer.style.transition = "opacity 0.5s ease";
+                flashContainer.style.opacity = "0";
+                setTimeout(() => flashContainer.remove(), 500); // Remove after fade-out
+            }
+        }, 5000); // 5 seconds
+    </script>
+    {% endif %}
+    {% endwith %}
+    <div class="container">
+        <h2>Forgot Password</h2>
+        <form action="{{ url_for('forgot_password') }}"  method="POST" onsubmit="return validatePasswords()">
+            <input type="text" name="username" placeholder="Username or Email" required>
+            <input type="password" name="newPassword" placeholder="Enter new password" required>
+            <input type="password" name="reNewPassword" placeholder="Re-enter new password" required>
+            <button type="submit">Reset Password</button>
+        </form>
+        <a href="{{ url_for('login') }}">Back to Login</a>
+    </div>
+    <script>
+        function validatePasswords() {
+            const newPassword = document.getElementById('newPassword').value;
+            const reNewPassword = document.getElementById('reNewPassword').value;
+
+            if (newPassword !== reNewPassword) {
+                alert('Passwords do not match.');
+                return false;
+            }
+            return true;
+        }
+        function resetPasswordSuccess() {
+            alert('Password reset successful. Please check your email.');
+        }
+    </script>
+</body>
+</html>
