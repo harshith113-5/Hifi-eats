@@ -1,0 +1,592 @@
+/* Modern color palette and variables */
+:root {
+    --primary-color: #ff6b01;
+    --primary-hover: #e65a00;
+    --primary-light: #fff0e6;
+    --secondary-color: #fff9f5;
+    --border-color: #ffe4d3;
+    --text-color: #2d2416;
+    --text-light: #7c6555;
+    --success-color: #34a853;
+    --danger-color: #ea4335;
+    --shadow-sm: 0 2px 4px rgba(255, 107, 1, 0.08);
+    --shadow-md: 0 4px 12px rgba(255, 107, 1, 0.12);
+    --gradient: linear-gradient(135deg, #ff6b01, #ff8534);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.content-wrapper {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+/* Enhanced Form Section */
+.form-section {
+    flex: 0 0 400px;
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: var(--shadow-md);
+    position: sticky;
+    top: 2rem;
+    border: 1px solid var(--border-color);
+}
+
+/* Enhanced Table Section */
+.table-section {
+    flex: 1;
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+}
+
+/* Modern Headings */
+h2 {
+    color: var(--text-color);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    position: relative;
+    display: inline-block;
+}
+
+h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--gradient);
+    border-radius: 2px;
+}
+
+/* Enhanced Form Styles */
+.menu-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+}
+
+.form-group {
+    margin-bottom: 0.75rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
+input[type="text"],
+input[type="number"],
+textarea,
+select {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    font-size: 0.95rem;
+    transition: var(--transition);
+    background-color: white;
+}
+
+textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+input:hover,
+textarea:hover,
+select:hover {
+    border-color: var(--primary-color);
+    background-color: var(--primary-light);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 4px rgba(255, 107, 1, 0.1);
+    background-color: white;
+}
+
+/* Enhanced Button Styles */
+button {
+    background: var(--gradient);
+    color: white;
+    padding: 1rem 1.5rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: var(--transition);
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 107, 1, 0.2);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+/* Modern Table Styles */
+.table-container {
+    overflow-x: auto;
+    border-radius: 12px;
+    border: 2px solid var(--border-color);
+}
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 0.95rem;
+}
+
+th {
+    background: var(--primary-light);
+    color: var(--primary-color);
+    padding: 1.25rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    white-space: nowrap;
+    border-bottom: 2px solid var(--border-color);
+}
+
+td {
+    padding: 1.25rem 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+tr:hover {
+    background-color: var(--primary-light);
+}
+
+/* Enhanced Badge Styles */
+.badge {
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.veg {
+    background-color: #e6f4e8;
+    color: var(--success-color);
+    border: 1px solid #ccebd3;
+}
+
+.non-veg {
+    background-color: #fdecea;
+    color: var(--danger-color);
+    border: 1px solid #fcd3cf;
+}
+
+/* Enhanced Image Styles */
+.menu-image {
+    border-radius: 12px;
+    object-fit: cover;
+    width: 70px;
+    height: 70px;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+    border: 2px solid var(--border-color);
+}
+
+.menu-image:hover {
+    transform: scale(1.1) rotate(3deg);
+}
+
+/* Enhanced Action Buttons */
+.actions {
+    display: flex;
+    gap: 0.75rem;
+    white-space: nowrap;
+}
+
+.btn-edit, .btn-delete {
+    padding: 0.625rem 1.25rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition);
+    font-size: 0.875rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-edit {
+    background-color: var(--primary-light);
+    color: var(--primary-color);
+    border: 1px solid var(--border-color);
+}
+
+.btn-delete {
+    background-color: #fdecea;
+    color: var(--danger-color);
+    border: 1px solid #fcd3cf;
+}
+
+.btn-edit:hover {
+    background: var(--gradient);
+    color: white;
+    border-color: transparent;
+    transform: translateY(-1px);
+}
+
+.btn-delete:hover {
+    background-color: var(--danger-color);
+    color: white;
+    border-color: transparent;
+    transform: translateY(-1px);
+}
+
+/* Loading State with Orange Theme */
+.loading {
+    position: relative;
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 2px solid var(--border-color);
+    border-top: 2px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Enhanced Tooltip */
+[data-tooltip] {
+    position: relative;
+}
+
+[data-tooltip]:before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-8px);
+    padding: 0.75rem 1rem;
+    background: var(--gradient);
+    color: white;
+    font-size: 0.875rem;
+    border-radius: 8px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition);
+    box-shadow: var(--shadow-md);
+}
+
+[data-tooltip]:hover:before {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(-4px);
+}
+
+/* Glass Morphism Effect for Sections */
+.form-section, .table-section {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.95);
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .content-wrapper {
+        flex-direction: column;
+    }
+
+    .form-section {
+        position: static;
+        width: 100%;
+    }
+
+    .table-section {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    th, td {
+        padding: 1rem 0.75rem;
+    }
+
+    .actions {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .btn-edit, .btn-delete {
+        width: 100%;
+        justify-content: center;
+    }
+}
+/* Professional Animation Keyframes */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes gentleSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes subtleScale {
+    from {
+        opacity: 0;
+        transform: scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes gentlePulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.01);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes smoothShimmer {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+@keyframes borderGlow {
+    0% {
+        border-color: var(--border-color);
+    }
+    50% {
+        border-color: var(--primary-color);
+    }
+    100% {
+        border-color: var(--border-color);
+    }
+}
+
+@keyframes gentleFloat {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+/* Main sections entrance animation */
+.form-section, .table-section {
+    animation: subtleScale 0.8s ease-out;
+}
+
+/* Form elements animations */
+.form-group {
+    animation: fadeInUp 0.8s ease-out backwards;
+}
+
+.form-group:nth-child(1) { animation-delay: 0.2s; }
+.form-group:nth-child(2) { animation-delay: 0.3s; }
+.form-group:nth-child(3) { animation-delay: 0.4s; }
+.form-group:nth-child(4) { animation-delay: 0.5s; }
+
+/* Refined input interactions */
+input, textarea, select {
+    transition: all 0.3s ease-out;
+}
+
+input:focus, textarea:focus, select:focus {
+    animation: borderGlow 3s ease-in-out infinite;
+}
+
+/* Professional button effects */
+button {
+    background: linear-gradient(
+        90deg,
+        var(--primary-color) 0%,
+        var(--primary-hover) 50%,
+        var(--primary-color) 100%
+    );
+    background-size: 200% 100%;
+    transition: all 0.4s ease;
+}
+
+button:hover {
+    animation: gentlePulse 2s infinite ease-in-out;
+    transform: translateY(-2px);
+}
+
+/* Table animations */
+.table-container {
+    opacity: 0;
+    animation: fadeInUp 0.8s ease-out forwards;
+    animation-delay: 0.3s;
+}
+
+tr {
+    animation: gentleSlideIn 0.8s ease-out backwards;
+}
+
+tr:nth-child(1) { animation-delay: 0.4s; }
+tr:nth-child(2) { animation-delay: 0.5s; }
+tr:nth-child(3) { animation-delay: 0.6s; }
+tr:nth-child(4) { animation-delay: 0.7s; }
+tr:nth-child(5) { animation-delay: 0.8s; }
+
+/* Refined hover states */
+tr:hover {
+    transition: background-color 0.4s ease;
+    background: linear-gradient(
+        90deg,
+        var(--primary-light) 0%,
+        white 50%,
+        var(--primary-light) 100%
+    );
+    background-size: 200% 100%;
+    animation: smoothShimmer 3s linear infinite;
+}
+
+/* Professional action button animations */
+.btn-edit, .btn-delete {
+    transition: all 0.4s ease;
+}
+
+.btn-edit:hover, .btn-delete:hover {
+    transform: translateY(-2px);
+}
+
+/* Refined badge animation */
+.badge {
+    animation: gentleFloat 4s ease-in-out infinite;
+}
+
+/* Professional image interactions */
+.menu-image {
+    transition: all 0.4s ease;
+}
+
+.menu-image:hover {
+    transform: scale(1.05);
+}
+
+/* Enhanced loading animation */
+.loading::after {
+    animation: spin 1.2s linear infinite;
+}
+
+/* Smooth tooltip animation */
+[data-tooltip]:before {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateX(-50%) translateY(10px);
+}
+
+[data-tooltip]:hover:before {
+    transform: translateX(-50%) translateY(-4px);
+}
+
+/* Initial content load animation */
+.content-wrapper {
+    animation: subtleScale 1s ease-out;
+}
+
+/* Accessibility consideration */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
